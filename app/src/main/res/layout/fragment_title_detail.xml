@@ -13,7 +13,8 @@
         <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/hello_blank_fragment"/>
+                android:id="@+id/title_detail_name"
+                />
         <Button
                 android:text="Play"
                 android:layout_width="match_parent"

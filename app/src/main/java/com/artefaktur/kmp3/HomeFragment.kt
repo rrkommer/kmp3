@@ -15,25 +15,15 @@ import kotlinx.android.synthetic.main.fragment_home.view.*
 
 class HomeFragment : BaseFragment() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            //            main = it.get(ARG_PARAM1) as MainActivity
-        }
-        home_button_composerlist?.setOnClickListener {
-            val f = ComposerListFragment.newInstance(Mp3Db.getDb().composers)
-            manager().transaction {
-                replace(R.id.main_replacement, f)
-            }
-        }
-
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_home, container, false)
         view.home_button_composerlist.setOnClickListener {
             val f = ComposerListFragment.newInstance(Mp3Db.getDb().composers)
+            pushClient(f, R.id.main_replacement)
+        }
+        view.home_button_medialist.setOnClickListener {
+            val f = MediaListFragment.newInstance(Mp3Db.getDb().media)
             pushClient(f, R.id.main_replacement)
         }
         return view

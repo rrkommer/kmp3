@@ -11,6 +11,11 @@ import com.artefaktur.ourmp3.player.MediaPlayerHolder
 
 import kotlinx.android.synthetic.main.activity_main.toolbar
 
+import android.support.v7.widget.Toolbar
+import android.view.View
+import kotlinx.android.synthetic.main.activity_main.view.*
+
+
 class MainActivity : AppCompatActivity(),
     PlayerFragment.OnFragmentInteractionListener {
 
@@ -21,17 +26,35 @@ class MainActivity : AppCompatActivity(),
 
     lateinit var mediaPlayerHolder: MediaPlayerHolder
     lateinit var playerFragment: PlayerFragment
+    lateinit var homeFragment: HomeFragment
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
         supportFragmentManager.transaction {
-            val homeFragment = HomeFragment.newInstance(this@MainActivity)
+            homeFragment = HomeFragment.newInstance(this@MainActivity)
             playerFragment = PlayerFragment.newInstance(this@MainActivity)
             replace(R.id.main_replacement, homeFragment)
             replace(R.id.player_replacement, playerFragment)
         }
+        createToolbar()
         INSTANCE = this
+    }
+
+    fun createToolbar() {
+        val myToolbar = findViewById<View>(R.id.toolbar) as Toolbar
+        myToolbar.setTitle("")
+        setSupportActionBar(myToolbar)
+        myToolbar.toolbar_home_button.setOnClickListener {
+            supportFragmentManager.transaction {
+                replace(R.id.main_replacement, homeFragment)
+            }
+        }
+//        myToolbar.setNavigationIcon(R.drawable.ic_drawer)
+//        myToolbar.setLogo(R.drawable.brandz)
+//        myToolbar.setTitle("KMP3")
+//        myToolbar.setSubtitle("MyToolbar")
     }
 
     fun onMediaPlayerCreated(mediaPlayerHolder: MediaPlayerHolder) {

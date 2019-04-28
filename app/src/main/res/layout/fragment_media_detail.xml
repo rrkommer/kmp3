@@ -3,9 +3,8 @@
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
-             tools:context=".HomeFragment">
+             tools:context=".MediaDetailFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
@@ -13,17 +12,11 @@
         <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/hello_blank_fragment"/>
+                android:id="@+id/media_detail_name"
+        />
         <Button
-                android:text="Komponisten"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/home_button_composerlist"/>
-        <Button
-                android:text="Medien"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/home_button_medialist"/>
+                android:text="Play"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:id="@+id/media_detail_play_button"/>
     </LinearLayout>
-
 </FrameLayout>

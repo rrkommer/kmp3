@@ -23,6 +23,7 @@ class TitleDetailFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_title_detail, container, false)
+
         view.title_detail_play_button.setOnClickListener {
             val tracks = Mp3Db.getDb().getTracksFromTitle(title)
             if (tracks.size > 0) {
@@ -33,6 +34,7 @@ class TitleDetailFragment : Fragment() {
                 Log.w("", "No Track")
             }
         }
+        view.title_detail_name.text = title.titleName
         return view
     }
 
