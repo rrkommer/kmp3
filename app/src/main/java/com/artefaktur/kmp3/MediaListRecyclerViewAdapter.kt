@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import com.artefaktur.kmp3.database.Composer
 
 
 import com.artefaktur.kmp3.database.Media
@@ -14,8 +15,8 @@ import kotlinx.android.synthetic.main.fragment_medialist.view.*
 
 
 class MediaListRecyclerViewAdapter(
-    private val mediaList: List<Media>
-) : RecyclerView.Adapter<MediaListRecyclerViewAdapter.ViewHolder>() {
+    mediaList: List<Media>
+) : BaseRecycleAdapter<Media, MediaListRecyclerViewAdapter.ViewHolder>(mediaList) {
 
     private val mOnClickListener: View.OnClickListener
 
@@ -40,7 +41,7 @@ class MediaListRecyclerViewAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = mediaList[position]
+        val item = elements[position]
         holder.mIdView.text = item.listName
 //        holder.mContentView.text = item.content
 
@@ -50,7 +51,7 @@ class MediaListRecyclerViewAdapter(
         }
     }
 
-    override fun getItemCount(): Int = mediaList.size
+    override fun getItemCount(): Int = elements.size
 
     inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {
         val mIdView: TextView = mView.item_number

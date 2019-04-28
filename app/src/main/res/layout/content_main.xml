@@ -9,7 +9,7 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:showIn="@layout/activity_main"
         tools:context=".MainActivity">
-
+    <include layout="@layout/search_toolbar"/>
     <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"

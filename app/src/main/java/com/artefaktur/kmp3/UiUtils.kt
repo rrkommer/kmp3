@@ -29,9 +29,16 @@ public fun goMainLink(fragment: Fragment) {
 
 public fun pushClient(fragment: Fragment, id: Int) {
     doTrans {
+        val ma = getMainActivity()
+        ma.resetSearch()
         replace(id, fragment)
         addToBackStack(null)
         setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+        if (fragment is BaseFragment) {
+            ma.lastFragment = fragment
+        } else {
+            ma.lastFragment = null
+        }
     }
 }
 
@@ -91,7 +98,7 @@ object UIUtils {
 //        val results = mutableListOf<Composer>()
 //
 //        try {
-//            // case insensitive search
+//            // case insensitive onSearch
 //            artists.forEach {
 //                if (it.name.toLowerCase().startsWith(query.toLowerCase())) {
 //                    results.add(it)

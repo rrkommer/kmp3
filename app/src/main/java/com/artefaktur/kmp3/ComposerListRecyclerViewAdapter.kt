@@ -14,8 +14,8 @@ import kotlinx.android.synthetic.main.fragment_composerlist.view.*
 
 
 class ComposerListRecyclerViewAdapter(
-    private val mValues: List<Composer>
-) : RecyclerView.Adapter<ComposerListRecyclerViewAdapter.ViewHolder>() {
+    mValues: List<Composer>
+) : BaseRecycleAdapter<Composer, ComposerListRecyclerViewAdapter.ViewHolder>(mValues) {
 
     private val mOnClickListener: View.OnClickListener
     private var mLetters = LinkedHashMap<String, Int>()
@@ -24,11 +24,7 @@ class ComposerListRecyclerViewAdapter(
         mOnClickListener = View.OnClickListener { v ->
             val item = v.tag as Composer
             val composerFrag = ComposerDetailFragment.newInstance(item)
-            doTrans {
-                replace(R.id.main_replacement, composerFrag)
-                addToBackStack(null)
-                setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-            }
+            pushClient(composerFrag, R.id.main_replacement)
         }
         generateLetters()
     }
@@ -36,7 +32,7 @@ class ComposerListRecyclerViewAdapter(
 
     private fun generateLetters() {
         try {
-            mValues.forEachIndexed { index, artist ->
+            elements.forEachIndexed { index, artist ->
                 if (!mLetters.containsKey(artist.name.substring(0, 1))) {
                     mLetters[artist.name.substring(0, 1)] = index
                 }
@@ -65,17 +61,13 @@ class ComposerListRecyclerViewAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = mValues[position]
+        val item = elements[position]
         holder.mIdView.text = item.name
-//        holder.mContentView.text = item.content
-
         with(holder.mView) {
             tag = item
             setOnClickListener(mOnClickListener)
         }
     }
-
-    override fun getItemCount(): Int = mValues.size
 
 
     inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {

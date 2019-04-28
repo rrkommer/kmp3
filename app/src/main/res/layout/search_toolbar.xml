@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Toolbar
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/search_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="?attr/colorAccent"
+        android:elevation="2dp"
+        android:theme="@style/SearchBarStyle">
+    <EditText android:id="@+id/search_bar_text"
+              android:layout_width="350dp"
+              android:layout_height="match_parent"/>
+    <ImageView
+            android:id="@+id/search_bar_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="8dp"
+            android:src="@drawable/ic_round_search"/>
+
+</Toolbar>

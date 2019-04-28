@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-
+import com.artefaktur.kmp3.database.Composer
 
 
 import com.artefaktur.kmp3.database.Title
@@ -15,9 +15,8 @@ import kotlinx.android.synthetic.main.fragment_title.view.*
 
 
 class TitleRecyclerViewAdapter(
-    private val mValues: List<Title>
-
-) : RecyclerView.Adapter<TitleRecyclerViewAdapter.ViewHolder>() {
+    mValues: List<Title>
+) : BaseRecycleAdapter<Title, TitleRecyclerViewAdapter.ViewHolder>(mValues) {
 
     private val mOnClickListener: View.OnClickListener
 
@@ -42,7 +41,7 @@ class TitleRecyclerViewAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = mValues[position]
+        val item = elements[position]
         holder.mIdView.text = item.titleName
 //        holder.mContentView.text = item.content
 
@@ -52,7 +51,6 @@ class TitleRecyclerViewAdapter(
         }
     }
 
-    override fun getItemCount(): Int = mValues.size
 
     inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {
         val mIdView: TextView = mView.item_number

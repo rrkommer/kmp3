@@ -33,7 +33,7 @@
                         android:contentDescription="@string/app_name"
                         android:foreground="?android:attr/actionBarItemBackground"
                         android:padding="8dp"
-                        android:src="@drawable/ic_shuffle"
+                        android:src="@mipmap/ic_home"
                         android:gravity="left"/>
                 <ImageView
                         android:id="@+id/toolbar_back_button"
@@ -41,7 +41,14 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:padding="8dp"
-                        android:src="@drawable/ic_skip_previous"/>
+                        android:src="@mipmap/ic_back"/>
+                <ImageView
+                        android:id="@+id/toolbar_search_button"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:padding="8dp"
+                        android:src="@mipmap/ic_search"/>
             </LinearLayout>
         </android.support.v7.widget.Toolbar>
 

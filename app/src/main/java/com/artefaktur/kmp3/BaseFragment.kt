@@ -11,6 +11,12 @@ open class BaseFragment : Fragment() {
         return main!!.supportFragmentManager
     }
 
+    open fun onSearch(text: String) {
+
+    }
+    open fun onResetSearch() {
+
+    }
 
 }
 
