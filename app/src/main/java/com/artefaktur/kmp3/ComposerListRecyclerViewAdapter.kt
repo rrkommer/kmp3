@@ -1,5 +1,6 @@
 package com.artefaktur.kmp3
 
+import android.support.v4.app.FragmentTransaction
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -7,24 +8,26 @@ import android.view.ViewGroup
 import android.widget.TextView
 
 
-import com.artefaktur.kmp3.ComposerListFragment.OnListFragmentInteractionListener
 import com.artefaktur.kmp3.database.Composer
-import com.artefaktur.kmp3.dummy.DummyContent.DummyItem
 
 import kotlinx.android.synthetic.main.fragment_composerlist.view.*
 
 
-class MyComposerListRecyclerViewAdapter(
-    private val mValues: List<Composer>,
-    private val mListener: OnListFragmentInteractionListener?
-) : RecyclerView.Adapter<MyComposerListRecyclerViewAdapter.ViewHolder>() {
+class ComposerListRecyclerViewAdapter(
+    private val mValues: List<Composer>
+) : RecyclerView.Adapter<ComposerListRecyclerViewAdapter.ViewHolder>() {
 
     private val mOnClickListener: View.OnClickListener
 
     init {
         mOnClickListener = View.OnClickListener { v ->
             val item = v.tag as Composer
-            mListener?.onSelectComposer(item)
+            val composerFrag = ComposerDetailFragment.newInstance(item)
+            doTrans {
+                replace(R.id.main_replacement, composerFrag)
+                addToBackStack(null)
+                setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+            }
         }
     }
 

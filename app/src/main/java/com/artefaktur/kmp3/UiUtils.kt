@@ -9,3 +9,7 @@ public fun FragmentManager.transaction(callback: FragmentTransaction.() -> Unit)
     trans.callback()
     trans.commit()
 }
+
+public fun doTrans(callback: FragmentTransaction.() -> Unit) {
+    getMainActivity().supportFragmentManager.transaction(callback)
+}

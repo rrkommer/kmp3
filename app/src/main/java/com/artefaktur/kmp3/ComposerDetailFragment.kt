@@ -23,7 +23,7 @@ class ComposerDetailFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_composer_detail, container, false)
         view.composer_detail_name.text = composer.name
         getMainActivity().supportFragmentManager.transaction {
-            val titleFragement = TitleFragment.newInstance(Mp3Db.getDb().getTitelFromKomposer(composer))
+            val titleFragement = TitleListFragment.newInstance(Mp3Db.getDb().getTitelFromKomposer(composer))
             replace(R.id.composer_detail_titlereplacement, titleFragement)
         }
         return view

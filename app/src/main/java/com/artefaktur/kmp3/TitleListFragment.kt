@@ -9,23 +9,14 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.artefaktur.kmp3.database.Mp3Db
 import com.artefaktur.kmp3.database.Title
 
-import com.artefaktur.kmp3.dummy.DummyContent
-import com.artefaktur.kmp3.dummy.DummyContent.DummyItem
 
-/**
- * A fragment representing a list of Items.
- * Activities containing this fragment MUST implement the
- * [TitleFragment.OnListFragmentInteractionListener] interface.
- */
-class TitleFragment : Fragment() {
+class TitleListFragment : Fragment() {
 
 
     private var columnCount = 1
 
-    private var listener: OnListFragmentInteractionListener? = null
     private lateinit var titles: List<Title>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,37 +35,20 @@ class TitleFragment : Fragment() {
                     columnCount <= 1 -> LinearLayoutManager(context)
                     else -> GridLayoutManager(context, columnCount)
                 }
-                adapter = TitleRecyclerViewAdapter(titles, listener)
+                adapter = TitleRecyclerViewAdapter(titles)
             }
         }
         return view
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        if (context is OnListFragmentInteractionListener) {
-            listener = context
-        } else {
-            throw RuntimeException(context.toString() + " must implement OnListFragmentInteractionListener")
-        }
-    }
-
-    override fun onDetach() {
+      override fun onDetach() {
         super.onDetach()
-        listener = null
-    }
-
-
-    interface OnListFragmentInteractionListener {
-
-        fun onSelectedTitleInList(item: Title?)
     }
 
     companion object {
-
         @JvmStatic
-        fun newInstance(titles: List<Title>): TitleFragment {
-            val ret = TitleFragment().apply {
+        fun newInstance(titles: List<Title>): TitleListFragment {
+            val ret = TitleListFragment().apply {
                 arguments = Bundle().apply {
 
                 }

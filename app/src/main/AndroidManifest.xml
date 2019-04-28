@@ -21,25 +21,6 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity
-                android:name=".ItemListActivity"
-                android:parentActivityName=".MainActivity"
-                android:label="@string/app_name"
-                android:theme="@style/AppTheme.NoActionBar">
-
-            <meta-data
-                    android:name="android.support.PARENT_ACTIVITY"
-                    android:value="com.artefaktur.kmp3.MainActivity"/>
-        </activity>
-        <activity
-                android:name=".ItemDetailActivity"
-                android:label="@string/title_item_detail"
-                android:parentActivityName=".ItemListActivity"
-                android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                    android:name="android.support.PARENT_ACTIVITY"
-                    android:value="com.artefaktur.kmp3.ItemListActivity"/>
-        </activity>
         <service android:name="com.artefaktur.kmp3.player.PlayerService" />
     </application>
 
