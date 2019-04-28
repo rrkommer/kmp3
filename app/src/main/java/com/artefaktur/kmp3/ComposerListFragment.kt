@@ -9,8 +9,8 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.artefaktur.kmp3.database.Composer
 import com.artefaktur.kmp3.database.Mp3Db
-import com.artefaktur.kmp3.database.Title
 
 import com.artefaktur.kmp3.dummy.DummyContent
 import com.artefaktur.kmp3.dummy.DummyContent.DummyItem
@@ -18,33 +18,28 @@ import com.artefaktur.kmp3.dummy.DummyContent.DummyItem
 /**
  * A fragment representing a list of Items.
  * Activities containing this fragment MUST implement the
- * [TitleFragment.OnListFragmentInteractionListener] interface.
+ * [ComposerListFragment.OnListFragmentInteractionListener] interface.
  */
-class TitleFragment : Fragment() {
-
-
-    private var columnCount = 1
+class ComposerListFragment : Fragment() {
 
     private var listener: OnListFragmentInteractionListener? = null
-    private lateinit var titles: List<Title>
+    private lateinit var composers: List<Composer>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-
-        }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_title_list, container, false)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val view = inflater.inflate(R.layout.fragment_composerlist_list, container, false)
 
         // Set the adapter
         if (view is RecyclerView) {
             with(view) {
-                layoutManager = when {
-                    columnCount <= 1 -> LinearLayoutManager(context)
-                    else -> GridLayoutManager(context, columnCount)
-                }
-                adapter = TitleRecyclerViewAdapter(titles, listener)
+                layoutManager = GridLayoutManager(context, 2)
+
+                adapter = MyComposerListRecyclerViewAdapter(Mp3Db.getDb().composers, listener)
             }
         }
         return view
@@ -66,20 +61,15 @@ class TitleFragment : Fragment() {
 
 
     interface OnListFragmentInteractionListener {
-
-        fun onSelectedTitleInList(item: Title?)
+        fun onSelectComposer(item: Composer?)
     }
 
     companion object {
 
         @JvmStatic
-        fun newInstance(titles: List<Title>): TitleFragment {
-            val ret = TitleFragment().apply {
-                arguments = Bundle().apply {
-
-                }
-            }
-            ret.titles = titles
+        fun newInstance(composers: List<Composer>): ComposerListFragment {
+            val ret = ComposerListFragment()
+            ret.composers = composers
             return ret
         }
     }

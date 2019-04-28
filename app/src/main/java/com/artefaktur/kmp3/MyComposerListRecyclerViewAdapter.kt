@@ -7,36 +7,36 @@ import android.view.ViewGroup
 import android.widget.TextView
 
 
-import com.artefaktur.kmp3.TitleFragment.OnListFragmentInteractionListener
-import com.artefaktur.kmp3.database.Title
+import com.artefaktur.kmp3.ComposerListFragment.OnListFragmentInteractionListener
+import com.artefaktur.kmp3.database.Composer
 import com.artefaktur.kmp3.dummy.DummyContent.DummyItem
 
-import kotlinx.android.synthetic.main.fragment_title.view.*
+import kotlinx.android.synthetic.main.fragment_composerlist.view.*
 
 
-class TitleRecyclerViewAdapter(
-    private val mValues: List<Title>,
+class MyComposerListRecyclerViewAdapter(
+    private val mValues: List<Composer>,
     private val mListener: OnListFragmentInteractionListener?
-) : RecyclerView.Adapter<TitleRecyclerViewAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<MyComposerListRecyclerViewAdapter.ViewHolder>() {
 
     private val mOnClickListener: View.OnClickListener
 
     init {
         mOnClickListener = View.OnClickListener { v ->
-            val item = v.tag as Title
-            mListener?.onSelectedTitleInList(item)
+            val item = v.tag as Composer
+            mListener?.onSelectComposer(item)
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.fragment_title, parent, false)
+            .inflate(R.layout.fragment_composerlist, parent, false)
         return ViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = mValues[position]
-        holder.mIdView.text = item.titleName
+        holder.mIdView.text = item.name
 //        holder.mContentView.text = item.content
 
         with(holder.mView) {
