@@ -38,7 +38,7 @@ class MediaDetailFragment : Fragment() {
         showBooklet(view)
         doTrans {
             val tracks = media.tracks
-            val tf = TrackFragment.newInstance(tracks)
+            val tf = TrackFragment.newInstance(tracks, true)
             replace(R.id.media_detail_track_replacement, tf)
         }
         return view

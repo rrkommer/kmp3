@@ -18,21 +18,6 @@ class TitleRecyclerViewAdapter(
     mValues: List<Title>
 ) : BaseRecycleAdapter<Title, TitleRecyclerViewAdapter.ViewHolder>(mValues) {
 
-    private val mOnClickListener: View.OnClickListener
-
-    init {
-        mOnClickListener = View.OnClickListener { v ->
-            val item = v.tag as Title
-            doTrans {
-                val titleFrag = TitleDetailFragment.newInstance(item)
-                doTrans {
-                    replace(R.id.main_replacement, titleFrag)
-                    addToBackStack(null)
-                    setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                }
-            }
-        }
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -42,12 +27,17 @@ class TitleRecyclerViewAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = elements[position]
+
         holder.mIdView.text = item.titleName
 //        holder.mContentView.text = item.content
 
         with(holder.mView) {
             tag = item
-            setOnClickListener(mOnClickListener)
+            setOnClickListener {
+                val item = it.tag as Title
+                val titleFrag = TitleDetailFragment.newInstance(item)
+                goMainLink(titleFrag)
+            }
         }
     }
 

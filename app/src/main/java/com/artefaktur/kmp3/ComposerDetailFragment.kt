@@ -24,7 +24,6 @@ class ComposerDetailFragment : BaseFragment() {
         getMainActivity().supportFragmentManager.transaction {
             val elements = Mp3Db.getDb().getTitelFromKomposer(composer)
             titleFragement = TitleListFragment.newInstance(elements)
-
             replace(R.id.composer_detail_titlereplacement, titleFragement)
         }
         return view

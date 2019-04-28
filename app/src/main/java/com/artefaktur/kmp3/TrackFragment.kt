@@ -17,19 +17,20 @@ import com.artefaktur.kmp3.dummy.DummyContent.DummyItem
 class TrackFragment : Fragment() {
 
     lateinit var tracks: List<Track>
-
+    var showTitles: Boolean = true
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_track_list, container, false) as RecyclerView
         view.layoutManager = LinearLayoutManager(context)
-        view.adapter = TrackRecyclerViewAdapter(tracks)
+        view.adapter = TrackRecyclerViewAdapter(tracks, showTitles)
         return view
     }
 
     companion object {
         @JvmStatic
-        fun newInstance(tracks: List<Track>): TrackFragment {
+        fun newInstance(tracks: List<Track>, showTitles: Boolean): TrackFragment {
             val ret = TrackFragment()
             ret.tracks = tracks
+            ret.showTitles = showTitles
             return ret
         }
     }

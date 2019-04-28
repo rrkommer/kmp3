@@ -24,7 +24,7 @@ class ComposerListRecyclerViewAdapter(
         mOnClickListener = View.OnClickListener { v ->
             val item = v.tag as Composer
             val composerFrag = ComposerDetailFragment.newInstance(item)
-            pushClient(composerFrag, R.id.main_replacement)
+            goMainLink(composerFrag)
         }
         generateLetters()
     }

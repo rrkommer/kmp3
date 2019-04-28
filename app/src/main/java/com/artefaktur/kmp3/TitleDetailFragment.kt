@@ -75,7 +75,7 @@ class TitleDetailFragment : Fragment() {
 
         doTrans {
             val tracks = Mp3Db.getDb().getTracksFromTitle(title)
-            val tf = TrackFragment.newInstance(tracks)
+            val tf = TrackFragment.newInstance(tracks, false)
             replace(R.id.title_detail_track_replacement, tf)
         }
         return view
