@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
+<LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+               xmlns:app="http://schemas.android.com/apk/res-auto"
+               xmlns:tools="http://schemas.android.com/tools"
+               xmlns:wave="http://schemas.android.com/apk/res-auto"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:orientation="horizontal">
 <android.support.v7.widget.RecyclerView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/list"
+        android:id="@+id/composerlist_recycler"
         android:name="com.artefaktur.kmp3.ComposerListFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -12,3 +16,12 @@
         app:layoutManager="LinearLayoutManager"
         tools:context=".ComposerListFragment"
         tools:listitem="@layout/fragment_composerlist"/>
+
+    <com.artefaktur.kmp3.WaveView
+            android:id="@+id/composer_wave_view"
+            android:layout_width="match_parent"
+            wave:sidebarAccentColor="?attr/colorAccent"
+            wave:sidebarLettersColor="?attr/icon_color"
+            android:layout_height="match_parent"/>
+
+</LinearLayout>

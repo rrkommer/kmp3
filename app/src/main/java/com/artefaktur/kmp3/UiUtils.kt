@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentTransaction
 import android.support.v4.content.ContextCompat
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewTreeObserver
 import android.widget.TextView
 import com.artefaktur.kmp3.database.Composer
 
@@ -20,6 +21,16 @@ public fun doTrans(callback: FragmentTransaction.() -> Unit) {
     getMainActivity().supportFragmentManager.transaction(callback)
 }
 
+public inline fun <T : View> T.afterMeasured(crossinline f: T.() -> Unit) {
+    viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+        override fun onGlobalLayout() {
+            if (measuredWidth > 0 && measuredHeight > 0) {
+                viewTreeObserver.removeOnGlobalLayoutListener(this)
+                f()
+            }
+        }
+    })
+}
 
 object UIUtils {
 

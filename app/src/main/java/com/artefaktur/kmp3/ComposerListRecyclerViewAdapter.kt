@@ -18,6 +18,7 @@ class ComposerListRecyclerViewAdapter(
 ) : RecyclerView.Adapter<ComposerListRecyclerViewAdapter.ViewHolder>() {
 
     private val mOnClickListener: View.OnClickListener
+    private var mLetters = LinkedHashMap<String, Int>()
 
     init {
         mOnClickListener = View.OnClickListener { v ->
@@ -29,7 +30,33 @@ class ComposerListRecyclerViewAdapter(
                 setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
             }
         }
+        generateLetters()
     }
+
+
+    private fun generateLetters() {
+        try {
+            mValues.forEachIndexed { index, artist ->
+                if (!mLetters.containsKey(artist.name.substring(0, 1))) {
+                    mLetters[artist.name.substring(0, 1)] = index
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    fun getLetterPosition(letter: String): Int {
+        if (mLetters.containsKey(letter)) {
+            return mLetters[letter]!!
+        }
+        return -1
+    }
+
+    fun getLetters(): Array<String> {
+        return mLetters.keys.toTypedArray()
+    }
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -49,6 +76,7 @@ class ComposerListRecyclerViewAdapter(
     }
 
     override fun getItemCount(): Int = mValues.size
+
 
     inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {
         val mIdView: TextView = mView.item_number
