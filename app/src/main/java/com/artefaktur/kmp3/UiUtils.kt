@@ -1,6 +1,7 @@
 package com.artefaktur.kmp3
 
 import android.content.Context
+import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentTransaction
 import android.support.v4.content.ContextCompat
@@ -8,6 +9,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewTreeObserver
 import android.widget.TextView
+import android.widget.Toast
 import com.artefaktur.kmp3.database.Composer
 
 
@@ -19,6 +21,22 @@ public fun FragmentManager.transaction(callback: FragmentTransaction.() -> Unit)
 
 public fun doTrans(callback: FragmentTransaction.() -> Unit) {
     getMainActivity().supportFragmentManager.transaction(callback)
+}
+
+public fun goMainLink(fragment: Fragment) {
+    pushClient(fragment, R.id.main_replacement)
+}
+
+public fun pushClient(fragment: Fragment, id: Int) {
+    doTrans {
+        replace(id, fragment)
+        addToBackStack(null)
+        setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+    }
+}
+
+public fun toast(text: String) {
+    Toast.makeText(getMainActivity(), text, Toast.LENGTH_LONG).show()
 }
 
 public inline fun <T : View> T.afterMeasured(crossinline f: T.() -> Unit) {

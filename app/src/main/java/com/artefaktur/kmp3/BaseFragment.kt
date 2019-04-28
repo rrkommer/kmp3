@@ -11,11 +11,7 @@ open class BaseFragment : Fragment() {
         return main!!.supportFragmentManager
     }
 
-    fun pushClient(fragment: Fragment, id: Int) {
-        manager().transaction {
-            replace(id, fragment)
-            addToBackStack(null)
-            setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-        }
-    }
+
 }
+
+

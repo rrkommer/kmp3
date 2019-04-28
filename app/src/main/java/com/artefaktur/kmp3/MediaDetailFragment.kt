@@ -11,6 +11,10 @@ import com.artefaktur.kmp3.database.Media
 import com.artefaktur.kmp3.database.Mp3Db
 import kotlinx.android.synthetic.main.fragment_media_detail.view.*
 import kotlinx.android.synthetic.main.fragment_title_detail.view.*
+import android.graphics.BitmapFactory
+import android.graphics.Bitmap
+import android.text.Spannable
+import android.text.SpannableStringBuilder
 
 
 class MediaDetailFragment : Fragment() {
@@ -29,8 +33,40 @@ class MediaDetailFragment : Fragment() {
                 Log.w("", "No Track")
             }
         }
-        view.media_detail_name.text = media.listName
+        view.media_detail_name.text = createDetailView()
+
+        showBooklet(view)
+        doTrans {
+            val tracks = media.tracks
+            val tf = TrackFragment.newInstance(tracks)
+            replace(R.id.media_detail_track_replacement, tf)
+        }
         return view
+    }
+
+    fun createDetailView(): Spannable {
+        val sb = SpannableStringBuilder()
+        sb.append(bold(size(2.0f, media.name1 + "\n")))
+        if (media.name2.isNotBlank() == true) {
+            sb.append(bold(size(1.5f, media.name2 + "\n")))
+        }
+        if (media.name3.isNotBlank() == true) {
+            sb.append(bold(size(1.5f, media.name2 + "\n")))
+        }
+        sb.append("Label: ${media.label}\n")
+        sb.append("InDb: ${media.dateInDb}\n")
+        return sb
+
+    }
+
+    private fun showBooklet(view: View) {
+        val booklet = media.getBookletFile(false)
+        if (booklet != null) {
+            val bitmap = BitmapFactory.decodeFile(booklet.absolutePath)
+            view.media_detail_bookletImage.setImageBitmap(bitmap)
+        } else {
+            view.media_detail_bookletImage.visibility = View.GONE
+        }
     }
 
 

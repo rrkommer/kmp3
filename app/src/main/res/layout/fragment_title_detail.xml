@@ -4,21 +4,31 @@
              android:layout_width="match_parent"
              android:layout_height="match_parent"
              tools:context=".TitleDetailFragment">
-
-
-    <LinearLayout
-            android:orientation="vertical"
+    <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-        <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/title_detail_name"
-                />
-        <Button
-                android:text="Play"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:id="@+id/title_detail_play_button"/>
-    </LinearLayout>
 
+        <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/title_detail_name"
+            />
+
+            <Button
+                    android:text="Play"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:id="@+id/title_detail_play_button"/>
+
+            <FrameLayout
+                    android:id="@+id/title_detail_track_replacement"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:orientation="vertical"/>
+
+
+        </LinearLayout>
+    </ScrollView>
 </FrameLayout>

@@ -62,6 +62,7 @@ class MainActivity : AppCompatActivity(),
         playerFragment.initWithMediaPlayer(mediaPlayerHolder)
     }
 
+
     override fun onFragmentInteraction(uri: Uri) {
         Log.i("", "onListFragmentInteraction")
     }

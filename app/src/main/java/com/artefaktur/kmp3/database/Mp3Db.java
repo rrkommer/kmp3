@@ -377,7 +377,9 @@ public class Mp3Db {
     }
     return med;
   }
-
+  public List<Interpret> getInterpretByTitel(Title title) {
+    return getInterpretByTitel(title.getPk());
+  }
   public List<Interpret> getInterpretByTitel(String pk) {
     List<String[]> la = interpretsDetail.findEquals(2, pk);
     List<Interpret> ret = new ArrayList<Interpret>(la.size());

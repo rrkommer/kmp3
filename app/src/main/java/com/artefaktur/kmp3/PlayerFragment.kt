@@ -148,12 +148,12 @@ class PlayerFragment : BaseFragment() {
     //method to handle player info click
     private fun handlePlayerInfo() {
         //if we are playing a song the go to the played artist/album details
-        val mph = getMediaPlayerHolder()
-        mph.currentSong?.let {
-            val currentSong = mph.currentSong
-            val titel = it.title
-            val artist = titel.composer
-
+//        val mph = getMediaPlayerHolder()
+//        mph.currentSong?.let {
+//            val currentSong = mph.currentSong
+//            val titel = it.title
+//            val artist = titel.composer
+//
 //        if (mNavigationArtist != artist) {
 //                mArtistsAdapter.onArtistClick?.invoke(artist)
 //                val playingAlbumPosition = //MusicUtils.getAlbumPositionInList(album, mSelectedArtistAlbums)
@@ -167,7 +167,7 @@ class PlayerFragment : BaseFragment() {
 //        } else {
 //            revealArtistDetails(!sArtistDiscographyExpanded)
 //        }
-        }
+//        }
 
     }
 
@@ -205,7 +205,7 @@ class PlayerFragment : BaseFragment() {
         val title = selectedSong.title
         val composer = title.composer
         playing_song.text =
-            MusicUtils.buildSpanned(getString(R.string.playing_song, composer.name, selectedSong.title))
+            MusicUtils.buildSpanned(getString(R.string.playing_song, composer.name, selectedSong.title.titleName))
         playing_album.text = title.titleName
 
         if (restore) {

@@ -168,8 +168,12 @@ class MediaPlayerHolder(
     }
 
     fun startPlaying(tracks: List<Track>) {
-        setCurrentSong(tracks[0], tracks)
-        initMediaPlayer(tracks[0])
+        startPlaying(tracks[0], tracks)
+    }
+
+    fun startPlaying(track: Track, tracks: List<Track>) {
+        setCurrentSong(track, tracks)
+        initMediaPlayer(track)
         resumeMediaPlayer()
     }
 
