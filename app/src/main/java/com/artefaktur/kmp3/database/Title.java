@@ -25,7 +25,7 @@ import java.util.Date;
 import java.util.List;
 
 
-public class Title extends RecBase implements EntityWithTracks
+public class Title extends RecBaseWithPk implements EntityWithTracks
 {
   public static final int PK = 0;
 

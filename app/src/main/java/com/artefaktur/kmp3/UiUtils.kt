@@ -11,6 +11,7 @@ import android.view.ViewTreeObserver
 import android.widget.TextView
 import android.widget.Toast
 import com.artefaktur.kmp3.database.Composer
+import com.artefaktur.kmp3.database.Track
 
 
 public fun FragmentManager.transaction(callback: FragmentTransaction.() -> Unit): Unit {
@@ -44,6 +45,10 @@ public fun pushClient(fragment: Fragment, id: Int) {
 
 public fun toast(text: String) {
     Toast.makeText(getMainActivity(), text, Toast.LENGTH_LONG).show()
+}
+
+public fun currentTrackPlaying(): Track? {
+    return getMainActivity().mediaPlayerHolder.currentSong
 }
 
 public inline fun <T : View> T.afterMeasured(crossinline f: T.() -> Unit) {

@@ -18,7 +18,7 @@ package com.artefaktur.kmp3.database;
 
 import java.util.List;
 
-public class Interpret extends RecBase
+public class Interpret extends RecBaseWithPk
 {
   public static final int PK = 0;
 

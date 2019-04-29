@@ -26,6 +26,7 @@ public class Mp3Db {
   private static Mp3Db INSTANCE = null;
 
   private Mp3UsageDB usageDb;
+
   public static final Mp3Db getDb() {
     return INSTANCE;
   }
@@ -59,6 +60,7 @@ public class Mp3Db {
   CsvTable orchesters = new CsvTable();
 
   CsvTable orchestersDetail = new CsvTable();
+  Map<String, IdentityHashMap<String[], Boolean>> composer2Media = null;
 
   public Mp3Db(String path, String mp3root) {
     dbpath = new File(path);
@@ -202,6 +204,40 @@ public class Mp3Db {
       ret.add(new Title(this, rec));
     }
     return ret;
+  }
+
+  public List<Media> getMediaByComposer(Composer composer) {
+    if (composer2Media == null) {
+      buildComposer2Media();
+    }
+    IdentityHashMap<String[], Boolean> ret = composer2Media.get(composer.getName());
+    if (ret == null) {
+      return Collections.emptyList();
+    }
+    List<Media> retl = new ArrayList<>(ret.size());
+    for (String[] sa : ret.keySet()) {
+      retl.add(new Media(this, sa));
+    }
+    return retl;
+  }
+
+  private void buildComposer2Media() {
+    Map<String, IdentityHashMap<String[], Boolean>> tcm = new HashMap(composers.size());
+    for (String[] media : medien.table) {
+      Media m = new Media(this, media);
+      for (Title titel : m.getTitleList()) {
+        String cname = titel.getComposerName();
+        IdentityHashMap<String[], Boolean> ml = tcm.get(cname);
+        if (ml == null) {
+          ml = new IdentityHashMap<String[], Boolean>();
+          tcm.put(cname, ml);
+        }
+        if (ml.containsKey(media) == false) {
+          ml.put(media, true);
+        }
+      }
+    }
+    composer2Media = tcm;
   }
 
   public List<Track> getTracksFromTitle(Title title) {
@@ -377,9 +413,11 @@ public class Mp3Db {
     }
     return med;
   }
+
   public List<Interpret> getInterpretByTitel(Title title) {
     return getInterpretByTitel(title.getPk());
   }
+
   public List<Interpret> getInterpretByTitel(String pk) {
     List<String[]> la = interpretsDetail.findEquals(2, pk);
     List<Interpret> ret = new ArrayList<Interpret>(la.size());

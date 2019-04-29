@@ -16,7 +16,7 @@
 
 package com.artefaktur.kmp3.database;
 
-public class Dirigent extends RecBase
+public class Dirigent extends RecBaseWithPk
 {
   public static final int PK = 0;
 

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="wrap_content"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:orientation="vertical">
 
@@ -10,23 +11,45 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/text_margin"
-            android:textAppearance="?attr/textAppearanceListItem"/>
-    <LinearLayout android:layout_width="wrap_content"
+            android:textAppearance="?attr/textAppearanceListItem" tools:text="Titel"/>
+
+    <LinearLayout android:layout_width="match_parent"
                   android:layout_height="wrap_content"
-                  android:orientation="horizontal">
+                  android:orientation="horizontal"
+                  android:gravity="center_vertical|center_horizontal"
+    >
         <TextView
                 android:id="@+id/item_number"
-
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/text_margin"
-                android:textAppearance="?attr/textAppearanceListItem"/>
+                android:layout_gravity="left"
+                android:textAppearance="?attr/textAppearanceListItem" tools:text="1"/>
 
         <TextView
                 android:id="@+id/content"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/text_margin"
-                android:textAppearance="?attr/textAppearanceListItem"/>
+                android:textAppearance="?attr/textAppearanceListItem"
+                android:background="?android:attr/activatedBackgroundIndicator"
+                android:gravity="left"
+                android:singleLine="false"
+                android:layout_weight="1"
+                tools:text="Eine lange beschre ibung asdfasdf asdfa sdfasdsd"/>
+        <TextView
+                android:id="@+id/track_time"
+                android:layout_width="118dp"
+                android:minWidth="118dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/text_margin"
+                android:layout_gravity="right"
+                android:layout_weight="2"
+                android:text="Right Aligned"
+                android:singleLine="true"
+                android:gravity="end"
+                android:textAppearance="?attr/textAppearanceListItem" tools:text="12:20"/>
     </LinearLayout>
+
+
 </LinearLayout>

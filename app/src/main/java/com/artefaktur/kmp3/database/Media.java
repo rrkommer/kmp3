@@ -31,7 +31,7 @@ import java.util.List;
 //import de.micromata.genome.util.xml.xmlbuilder.Xml;
 //import de.micromata.genome.util.xml.xmlbuilder.html.Html;
 
-public class Media extends RecBase implements EntityWithTracks {
+public class Media extends RecBaseWithPk implements EntityWithTracks {
     public static final int PK = 0;
 
     public static final int NAME1 = 1;

@@ -21,7 +21,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 
 import java.io.File;
 
-public class Composer extends RecBase {
+public class Composer extends RecBaseWithPk {
     public static final int PK = 0;
 
     public static final int NAME = 1;

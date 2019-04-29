@@ -1,12 +1,10 @@
 package com.artefaktur.kmp3
 
-import android.support.v4.app.FragmentTransaction
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import com.artefaktur.kmp3.database.Composer
 
 
 import com.artefaktur.kmp3.database.Title
@@ -28,8 +26,8 @@ class TitleRecyclerViewAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = elements[position]
 
-        holder.mIdView.text = item.titleName
-//        holder.mContentView.text = item.content
+        holder.item_number.text = item.titleName
+
 
         with(holder.mView) {
             tag = item
@@ -43,7 +41,7 @@ class TitleRecyclerViewAdapter(
 
 
     inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {
-        val mIdView: TextView = mView.item_number
+        val item_number: TextView = mView.item_number
         val mContentView: TextView = mView.content
 
         override fun toString(): String {

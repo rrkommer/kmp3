@@ -16,11 +16,11 @@
             android:layout_height="match_parent">
         <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="600dp"
+                android:layout_height="610dp"
                 android:id="@+id/main_replacement">
         </FrameLayout>
         <RelativeLayout android:layout_width="match_parent"
-                      android:layout_height="80dp"
+                      android:layout_height="110dp"
                       android:gravity="center|bottom"
                       android:layout_alignParentBottom="true"
                       android:orientation="vertical">

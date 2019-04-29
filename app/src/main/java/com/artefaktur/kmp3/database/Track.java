@@ -25,7 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 
-public class Track extends RecBase {
+public class Track extends RecBaseWithPk {
   /**
    * Asume maximum tracks in DB
    */
@@ -73,6 +73,8 @@ public class Track extends RecBase {
   public Track(Mp3Db db, String[] rec) {
     super(db, rec);
   }
+
+
 
   static String[] buildRecFromFile(Title title, File mp3file, int no) {
 

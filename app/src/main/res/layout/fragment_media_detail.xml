@@ -16,10 +16,19 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/media_detail_name"
             />
-            <ImageView
-                    android:id="@+id/media_detail_bookletImage"
-                    android:layout_width="200dp" android:layout_height="200dp"
-            />
+            <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                <ImageView
+                        android:id="@+id/media_detail_bookletImageFront"
+                        android:layout_width="@dimen/front_album_size" android:layout_height="@dimen/front_album_size"
+                />
+                <ImageView
+                        android:id="@+id/media_detail_bookletImageBack"
+                        android:layout_width="@dimen/back_album_size" android:layout_height="@dimen/back_album_size"
+                />
+            </LinearLayout>
             <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

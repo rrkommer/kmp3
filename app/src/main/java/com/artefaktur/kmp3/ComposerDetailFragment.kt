@@ -16,42 +16,70 @@ import kotlinx.android.synthetic.main.fragment_composer_detail.view.*
 
 class ComposerDetailFragment : BaseFragment() {
 
-    lateinit var composer: Composer
-    lateinit var titleFragement: TitleListFragment
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_composer_detail, container, false)
-        view.composer_detail_name.text = createDetailView()
-        getMainActivity().supportFragmentManager.transaction {
-            val elements = Mp3Db.getDb().getTitelFromKomposer(composer)
-            titleFragement = TitleListFragment.newInstance(elements)
-            replace(R.id.composer_detail_titlereplacement, titleFragement)
-        }
-        return view
-    }
+  lateinit var composer: Composer
+  var titleListFragement: TitleListFragment? = null
+  var mediaListFragement: MediaListFragment? = null
+  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    val view = inflater.inflate(R.layout.fragment_composer_detail, container, false)
+    view.composer_detail_name.text = createDetailView()
+    showTitle(view)
 
-    fun createDetailView(): Spannable {
-        val title = spannable {
-            bold(size(2.0f, "${composer.name}\n")) +
-                    bold("(${composer.bornYear} - ${composer.diedYear}) ${composer.country}\n")
-        }
-        return title
+    view.composer_detail_button_showtitle.setOnClickListener {
+      showTitle(view)
+    }
+    view.composer_detail_button_showmedien.setOnClickListener {
+      showMedien(view)
+    }
+    return view
+  }
+
+  private fun showMedien(view: View?) {
+    getMainActivity().supportFragmentManager.transaction {
+      val elements = Mp3Db.getDb().getMediaByComposer(composer)
+      titleListFragement = null
+      mediaListFragement = MediaListFragment.newInstance(elements)
+      mediaListFragement?.let {
+        replace(R.id.composer_detail_titlereplacement, it)
+      }
+    }
+  }
+
+  fun showTitle(view: View) {
+    getMainActivity().supportFragmentManager.transaction {
+      val elements = Mp3Db.getDb().getTitelFromKomposer(composer)
+      mediaListFragement = null
+      titleListFragement = TitleListFragment.newInstance(elements)
+      titleListFragement?.let {
+        replace(R.id.composer_detail_titlereplacement, it)
+      }
+    }
+  }
+
+  fun createDetailView(): Spannable {
+    val title = spannable {
+      bold(size(2.0f, "${composer.name}\n")) +
+              bold("(${composer.bornYear} - ${composer.diedYear}) ${composer.country}\n")
+    }
+    return title
 //        return sb
-    }
+  }
 
-    override fun onSearch(text: String) {
-        titleFragement.onSearch(text)
-    }
+  override fun onSearch(text: String) {
+    titleListFragement?.let { it.onSearch(text) }
+    mediaListFragement?.let { it.onSearch(text) }
+  }
 
-    override fun onResetSearch() {
-        titleFragement.onResetSearch()
-    }
+  override fun onResetSearch() {
+    titleListFragement?.let { it.onResetSearch() }
+    mediaListFragement?.let { it.onResetSearch() }
+  }
 
-    companion object {
-        @JvmStatic
-        fun newInstance(composer: Composer): ComposerDetailFragment {
-            val ret = ComposerDetailFragment()
-            ret.composer = composer
-            return ret
-        }
+  companion object {
+    @JvmStatic
+    fun newInstance(composer: Composer): ComposerDetailFragment {
+      val ret = ComposerDetailFragment()
+      ret.composer = composer
+      return ret
     }
+  }
 }
