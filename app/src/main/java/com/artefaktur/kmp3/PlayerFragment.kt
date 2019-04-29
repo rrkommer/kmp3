@@ -29,7 +29,7 @@ import kotlinx.android.synthetic.main.player_seek.view.*
 
 
 class PlayerFragment : BaseFragment() {
-    var baseDir = "/storage/3633-6130/ourMP3"
+    var baseDir = "/storage/3633-6130/ourMP3/"
     private var listener: OnFragmentInteractionListener? = null
     private var sBound: Boolean = false
 
@@ -264,7 +264,7 @@ class PlayerFragment : BaseFragment() {
     }
 
     fun loadMusic() {
-        val db = Mp3Db.get(baseDir + "/ourMP3gwiki/acccexp", baseDir + "/mp3root/classic")
+        val db = Mp3Db.get(baseDir + "gwikiweb/acccexp", baseDir + "/mp3root/classic")
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
