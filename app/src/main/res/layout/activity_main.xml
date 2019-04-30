@@ -49,6 +49,15 @@
                         android:layout_weight="1"
                         android:padding="8dp"
                         android:src="@mipmap/ic_search"/>
+                <ImageView
+                        android:id="@+id/toolbar_menu"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:padding="8dp"
+                        android:paddingStart="30dp"
+                        android:src="@mipmap/ic_menu"
+                />
             </LinearLayout>
         </android.support.v7.widget.Toolbar>
 

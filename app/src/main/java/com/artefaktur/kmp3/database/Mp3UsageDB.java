@@ -25,6 +25,7 @@ import java.util.List;
 
 public class Mp3UsageDB extends CsvTable
 {
+  public static String defaultUser = "rkommer";
   public static String TITLE = "title";
 
   public static String TRACK = "track";
@@ -120,6 +121,17 @@ public class Mp3UsageDB extends CsvTable
 //        dec(userName, TRACK, track.getPk());
 //      }
 //    }
+    store();
+  }
+  public Usage getMediaUsage(String pk) {
+    return getUsage(defaultUser, MEDIA, pk);
+  }
+  public void addMediaUsage(String pk) {
+    add(defaultUser, MEDIA, pk);
+    store();
+  }
+  public void downMediaUsage(String pk) {
+    dec(defaultUser, MEDIA, pk);
     store();
   }
 

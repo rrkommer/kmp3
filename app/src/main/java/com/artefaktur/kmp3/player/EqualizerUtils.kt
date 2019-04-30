@@ -43,7 +43,9 @@ object EqualizerUtils {
                 val effects = Intent(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL)
                 effects.putExtra(AudioEffect.EXTRA_AUDIO_SESSION, sessionId)
                 effects.putExtra(AudioEffect.EXTRA_CONTENT_TYPE, AudioEffect.CONTENT_TYPE_MUSIC)
+
                 activity.startActivityForResult(effects, 0)
+                activity.startActivityForResult(Intent(Intent.ACTION_OPEN_DOCUMENT_TREE), 1);
             } catch (notFound: ActivityNotFoundException) {
                 notFound.printStackTrace()
             }

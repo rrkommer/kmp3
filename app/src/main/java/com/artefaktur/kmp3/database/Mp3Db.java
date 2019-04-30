@@ -16,6 +16,7 @@
 
 package com.artefaktur.kmp3.database;
 
+import com.artefaktur.kmp3.Mp3UsageDb;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
@@ -62,6 +63,15 @@ public class Mp3Db {
   CsvTable orchestersDetail = new CsvTable();
   Map<String, IdentityHashMap<String[], Boolean>> composer2Media = null;
 
+  public Mp3Db() {
+
+  }
+  public static Mp3Db createEmpty() {
+    Mp3Db ret = new Mp3Db();
+    ret.composer2Media = new HashMap<String, IdentityHashMap<String[], Boolean>>();
+    INSTANCE = ret;
+    return ret;
+  }
   public Mp3Db(String path, String mp3root) {
     dbpath = new File(path);
     this.mp3root = new File(mp3root);
@@ -471,6 +481,7 @@ public class Mp3Db {
   }
 
   public Mp3UsageDB getUsageDb() {
-    return usageDb;
+    return Mp3UsageDb.getInstance().getDb();
+//    return usageDb;
   }
 }

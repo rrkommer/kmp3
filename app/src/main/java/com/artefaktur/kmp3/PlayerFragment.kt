@@ -24,10 +24,11 @@ import kotlinx.android.synthetic.main.fragment_player.*
 import kotlinx.android.synthetic.main.fragment_player.view.*
 import kotlinx.android.synthetic.main.player_seek.*
 import kotlinx.android.synthetic.main.player_seek.view.*
+import java.lang.Exception
 
 
 class PlayerFragment : BaseFragment() {
-  var baseDir = "/storage/3633-6130/ourMP3/"
+
   private var listener: PlayerStatusReceiver? = null
   private var sBound: Boolean = false
 
@@ -231,7 +232,13 @@ class PlayerFragment : BaseFragment() {
   }
 
   fun loadMusic() {
-    val db = Mp3Db.get(baseDir + "gwikiweb/acccexp", baseDir + "/mp3root/classic")
+    val baseDir = getMainActivity().getSettings().getMp3Root()
+    try {
+      val db = Mp3Db.get(baseDir + "gwikiweb/acccexp", baseDir + "/mp3root/classic")
+    } catch (ex: Exception) {
+      toast("Cannot open Music db in dir: " + baseDir + "; " + ex.message)
+      Mp3Db.createEmpty()
+    }
   }
 
   override fun onActivityCreated(savedInstanceState: Bundle?) {

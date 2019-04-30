@@ -3,6 +3,9 @@ package com.artefaktur.kmp3
 import android.graphics.BitmapFactory
 import android.support.v4.app.FragmentTransaction
 import android.support.v7.widget.RecyclerView
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,6 +25,7 @@ class MediaListRecyclerViewAdapter(
 ) : BaseRecycleAdapter<Media, MediaListRecyclerViewAdapter.ViewHolder>(mediaList) {
 
   private val mOnClickListener: View.OnClickListener
+
   init {
     mOnClickListener = View.OnClickListener { v ->
       val item = v.tag as Media
@@ -42,11 +46,31 @@ class MediaListRecyclerViewAdapter(
       val bitmap = BitmapFactory.decodeFile(booklet.absolutePath)
       holder.bookletImageView.setImageBitmap(bitmap)
     }
-    holder.mContentView.text = item.listName
+    holder.mContentView.setText(getMediaList(item))
     with(holder.mView) {
       tag = item
       setOnClickListener(mOnClickListener)
     }
+  }
+
+  private fun getMediaList(media: Media): Spannable {
+    var name = media.name1
+    if (name.contains("DummyCD")) {
+      name = "DummyCD"
+    }
+    var ret = SpannableStringBuilder()
+    ret.append(name)
+    val name2 = media.name2
+    if (name2.isNullOrBlank() == false) {
+      ret.append(size(0.7f, ", " + name2))
+    }
+    val instance = Mp3UsageDb.getInstance()
+    instance.db.getMediaUsage(media.pk)?.let {
+      if (it.count > 0) {
+        ret.append(" " + size(0.7f, "(${it.dateString}: ${it.count})"))
+      }
+    }
+    return ret
   }
 
   override fun getItemCount(): Int = elements.size

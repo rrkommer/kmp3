@@ -1,5 +1,6 @@
 package com.artefaktur.kmp3
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity;
 import com.artefaktur.ourmp3.player.MediaPlayerHolder
@@ -92,6 +93,10 @@ class MainActivity : AppCompatActivity(),
 
     search_bar_button.setOnClickListener {
       search_toolbar.visibility = View.GONE
+    }
+    myToolbar.toolbar_menu.setOnClickListener {
+      val newFragment = SettingsDialog()
+      goMainLink(newFragment)
 
     }
   }
@@ -126,6 +131,13 @@ class MainActivity : AppCompatActivity(),
       }
     }
   }
+
+
+  fun getSettings(): AppSettings {
+    val packageName = "com.artefaktur.kmp3"
+    return AppSettings(getSharedPreferences(packageName, Context.MODE_PRIVATE))
+  }
+
 }
 
 public fun getMainActivity(): MainActivity {

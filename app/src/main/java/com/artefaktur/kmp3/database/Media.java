@@ -17,6 +17,7 @@
 package com.artefaktur.kmp3.database;
 
 
+import com.artefaktur.kmp3.Mp3UsageDb;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
@@ -117,6 +118,7 @@ public class Media extends RecBaseWithPk implements EntityWithTracks {
             sb.append(", ").append(get(NAME3));
         }
         sb.append(" (in: ").append(getCreatedDate()).append(")");
+
         sb.append(Track.getUsageDisplay(this));
         return sb.toString();
     }
@@ -182,12 +184,17 @@ public class Media extends RecBaseWithPk implements EntityWithTracks {
         // });
         return tracks = ret;
     }
+    private Usage getUsage() {
+        Mp3UsageDB usage = getDb().getUsageDb();
+        return usage.getMediaUsage(getPk());
+    }
 
     public float getUsageCount() {
         return Track.getUsageCount(getTracks());
     }
 
     public Date getLastUsage() {
+
         return Track.getLastUsage(getTracks());
     }
 

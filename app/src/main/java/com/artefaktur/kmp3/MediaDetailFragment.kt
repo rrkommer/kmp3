@@ -1,6 +1,8 @@
 package com.artefaktur.kmp3
 
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.util.Log
@@ -10,10 +12,12 @@ import android.view.ViewGroup
 import com.artefaktur.kmp3.database.Media
 import kotlinx.android.synthetic.main.fragment_media_detail.view.*
 import android.graphics.BitmapFactory
+import android.support.v4.content.ContextCompat
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.widget.ImageView
 import android.widget.LinearLayout
+import com.artefaktur.kmp3.database.Mp3Db
 import com.artefaktur.kmp3.database.Track
 
 
@@ -31,6 +35,7 @@ class MediaDetailFragment : BaseFragment(), PlayerStatusReceiver {
         val mph = getMainActivity().mediaPlayerHolder
         mph.startPlaying(tracks)
 
+        Mp3UsageDb.getInstance().db.addMediaUsage(media.pk)
       } else {
         Log.w("", "No Track")
       }
@@ -45,6 +50,7 @@ class MediaDetailFragment : BaseFragment(), PlayerStatusReceiver {
     }
     return view
   }
+
 
   override fun onStartPlayTrack(track: Track) {
     trackFragment.onStartPlayTrack(track)
@@ -65,6 +71,17 @@ class MediaDetailFragment : BaseFragment(), PlayerStatusReceiver {
     }
     sb.append("Label: ${media.label}\n")
     sb.append("InDb: ${media.dateInDb}\n")
+    val usedb = Mp3UsageDb.getInstance().db
+    usedb.getMediaUsage(media.pk)?.let {
+      if (it.count > 0) {
+        sb.append("Last Played: ${it.dateString}: ${it.count}\n")
+        sb.append(clickSpan(normal("<Unuse>\n")) {
+
+          usedb.downMediaUsage(media.pk)
+        })
+//        sb.append("\n")
+      }
+    }
     return sb
 
   }
