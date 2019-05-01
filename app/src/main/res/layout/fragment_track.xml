@@ -20,15 +20,15 @@
     >
         <TextView
                 android:id="@+id/item_number"
-                android:layout_width="wrap_content"
+                android:layout_width="30dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/text_margin"
                 android:layout_gravity="left"
-                android:textAppearance="?attr/textAppearanceListItem" tools:text="1"/>
+                android:textAppearance="?attr/textAppearanceListItem" tools:text="12"/>
 
         <TextView
                 android:id="@+id/content"
-                android:layout_width="wrap_content"
+                android:layout_width="330dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/text_margin"
                 android:textAppearance="?attr/textAppearanceListItem"
@@ -36,11 +36,11 @@
                 android:gravity="left"
                 android:singleLine="false"
                 android:layout_weight="1"
-                tools:text="Eine lange beschre ibung asdfasdf asdfa sdfasdsd"/>
+                tools:text="Eine lange beschre ibung asdfasdf asdfa sdf asdsd"/>
         <TextView
                 android:id="@+id/track_time"
-                android:layout_width="118dp"
-                android:minWidth="118dp"
+                android:layout_width="100dp"
+                android:minWidth="100dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/text_margin"
                 android:layout_gravity="right"
