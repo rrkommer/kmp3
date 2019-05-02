@@ -380,6 +380,7 @@ class MediaPlayerHolder(
     try {
       index = if (isNext) currentIndex + 1 else currentIndex - 1
       if (index > mPlayingAlbumSongs!!.size - 1) {
+        pauseMediaPlayer()
         return
       }
       currentSong = mPlayingAlbumSongs!![index]

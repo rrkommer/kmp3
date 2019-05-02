@@ -15,6 +15,7 @@ import android.graphics.BitmapFactory
 import android.support.v4.content.ContextCompat
 import android.text.Spannable
 import android.text.SpannableStringBuilder
+import android.text.method.LinkMovementMethod
 import android.widget.ImageView
 import android.widget.LinearLayout
 import com.artefaktur.kmp3.database.Mp3Db
@@ -41,6 +42,7 @@ class MediaDetailFragment : BaseFragment(), PlayerStatusReceiver {
       }
     }
     view.media_detail_name.text = createDetailView()
+    view.media_detail_name.setMovementMethod(LinkMovementMethod.getInstance())
 
     showBooklet(view)
     doTrans {
@@ -74,12 +76,13 @@ class MediaDetailFragment : BaseFragment(), PlayerStatusReceiver {
     val usedb = Mp3UsageDb.getInstance().db
     usedb.getMediaUsage(media.pk)?.let {
       if (it.count > 0) {
-        sb.append("Last Played: ${it.dateString}: ${it.count}\n")
-        sb.append(clickSpan(normal("<Unuse>\n")) {
+        sb.append(spannable {
+          normal("Last Played: ${it.dateString}: ${it.count}: ") +
+                  clickSpan(normal("<Unuse>\n")) {
 
-          usedb.downMediaUsage(media.pk)
+                    usedb.downMediaUsage(media.pk)
+                  }
         })
-//        sb.append("\n")
       }
     }
     return sb
