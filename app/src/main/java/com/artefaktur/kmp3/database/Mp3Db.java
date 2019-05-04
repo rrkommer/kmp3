@@ -480,8 +480,5 @@ public class Mp3Db {
     return ret;
   }
 
-  public Mp3UsageDB getUsageDb() {
-    return Mp3UsageDb.getInstance().getDb();
-//    return usageDb;
-  }
+
 }

@@ -184,10 +184,6 @@ public class Media extends RecBaseWithPk implements EntityWithTracks {
         // });
         return tracks = ret;
     }
-    private Usage getUsage() {
-        Mp3UsageDB usage = getDb().getUsageDb();
-        return usage.getMediaUsage(getPk());
-    }
 
     public float getUsageCount() {
         return Track.getUsageCount(getTracks());

@@ -15,6 +15,7 @@ import com.artefaktur.kmp3.database.Composer
 
 
 import com.artefaktur.kmp3.database.Media
+import com.artefaktur.kmp3.intdb.toIsoString
 import kotlinx.android.synthetic.main.fragment_media_detail.view.*
 
 import kotlinx.android.synthetic.main.fragment_medialist.view.*
@@ -64,10 +65,12 @@ class MediaListRecyclerViewAdapter(
     if (name2.isNullOrBlank() == false) {
       ret.append(size(0.7f, ", " + name2))
     }
-    val instance = Mp3UsageDb.getInstance()
-    instance.db.getMediaUsage(media.pk)?.let {
-      if (it.count > 0) {
-        ret.append(" " + size(0.7f, "(${it.dateString}: ${it.count})"))
+    getMainActivity().intDb.mediaDao().findByMediaId(media.pk)?.let {
+      if (it.usage > 0) {
+        ret.append(" " + size(0.7f, "(${it.lastHeared.toIsoString()}: ${it.usage})"))
+      }
+      if (it.rating > 0) {
+        ret.append(" " + size(0.7f, " [${it.ratingAsStars()}]"))
       }
     }
     return ret

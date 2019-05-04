@@ -16,10 +16,12 @@ import android.support.v4.content.ContextCompat
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.method.LinkMovementMethod
+import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.LinearLayout
 import com.artefaktur.kmp3.database.Mp3Db
 import com.artefaktur.kmp3.database.Track
+import com.artefaktur.kmp3.intdb.toIsoString
 
 
 class MediaDetailFragment : BaseFragment(), PlayerStatusReceiver {
@@ -27,6 +29,7 @@ class MediaDetailFragment : BaseFragment(), PlayerStatusReceiver {
   var imageZoomed = false
   var hasBackImage = false
   lateinit var trackFragment: TrackFragment
+
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
     val view = inflater.inflate(R.layout.fragment_media_detail, container, false)
 
@@ -35,8 +38,8 @@ class MediaDetailFragment : BaseFragment(), PlayerStatusReceiver {
       if (tracks.size > 0) {
         val mph = getMainActivity().mediaPlayerHolder
         mph.startPlaying(tracks)
-
-        Mp3UsageDb.getInstance().db.addMediaUsage(media.pk)
+        getMainActivity().intDb.hearMedia(media)
+//        Mp3UsageDb.getInstance().db.addMediaUsage(media.pk)
       } else {
         Log.w("", "No Track")
       }
@@ -71,21 +74,53 @@ class MediaDetailFragment : BaseFragment(), PlayerStatusReceiver {
     if (media.name3.isNotBlank() == true) {
       sb.append(bold(size(1.5f, media.name2 + "\n")))
     }
-    sb.append("Label: ${media.label}\n")
+    val db = getMainActivity().intDb
+    val mediaUsage = db.mediaDao().findByMediaId(media.pk)
+
+    sb.append("Label: ${media.label}")
+    if (mediaUsage != null && mediaUsage.rating > 0) {
+      sb.append("        [${mediaUsage.ratingAsStars()}]")
+    }
+    sb.append("\n")
     sb.append("InDb: ${media.dateInDb}\n")
-    val usedb = Mp3UsageDb.getInstance().db
-    usedb.getMediaUsage(media.pk)?.let {
-      if (it.count > 0) {
+    db.mediaDao().findByMediaId(media.pk)?.let {
+      if (it.usage > 0) {
         sb.append(spannable {
-          normal("Last Played: ${it.dateString}: ${it.count}: ") +
+          normal("Last Played: ${it.lastHeared.toIsoString()}: ${it.usage}: ") +
                   clickSpan(normal("<Unuse>\n")) {
-                    usedb.downMediaUsage(media.pk)
+                    db.unHearMedia(media)
                   }
         })
       }
     }
+//    val usedb = Mp3UsageDb.getInstance().db
+//    usedb.getMediaUsage(media.pk)?.let {
+//
+//      }
+//    }
     return sb
+  }
 
+  override fun ajustMenu(mainActivity: MainActivity) {
+    resetMenu(mainActivity)
+    val menuFilter = mainActivity.menu.findItem(R.id.menu_rate);
+    menuFilter?.let { menuFilter.setVisible(true) }
+  }
+
+  override fun handleMenuItem(mainActivity: MainActivity, item: MenuItem): Boolean {
+    return when (item.itemId) {
+      R.id.menu_rate1 -> rateMedia(1)
+      R.id.menu_rate2 -> rateMedia(2)
+      R.id.menu_rate3 -> rateMedia(3)
+      R.id.menu_rate4 -> rateMedia(4)
+      R.id.menu_rate5 -> rateMedia(5)
+      else -> false
+    }
+  }
+
+  private fun rateMedia(rate: Int): Boolean {
+    getMainActivity().intDb.rateMedia(media, rate)
+    return true
   }
 
   private fun showBooklet(view: View) {

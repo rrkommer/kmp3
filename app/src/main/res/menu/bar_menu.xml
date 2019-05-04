@@ -12,6 +12,22 @@
                   android:title="Unheared"/>
         </menu>
     </item>
+    <item android:id="@+id/menu_rate"
+          android:title="Rating"
+          android:visible="false">
+        <menu>
+            <item android:id="@+id/menu_rate1"
+                  android:title="*"/>
+            <item android:id="@+id/menu_rate2"
+                  android:title="**"/>
+            <item android:id="@+id/menu_rate3"
+                  android:title="***"/>
+            <item android:id="@+id/menu_rate4"
+                  android:title="****"/>
+            <item android:id="@+id/menu_rate5"
+                  android:title="*****"/>
+        </menu>
+    </item>
     <item
             android:id="@+id/menu_configure"
             android:title="Config"

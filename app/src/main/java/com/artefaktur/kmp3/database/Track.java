@@ -122,9 +122,6 @@ public class Track extends RecBaseWithPk {
     return mp3path;
   }
 
-  public Usage getUsage(String userName) {
-    return db.getUsageDb().getUsage(userName, Mp3UsageDB.TRACK, getPk());
-  }
 
   public String getTitleFk() {
     return get(FK_TITLE);

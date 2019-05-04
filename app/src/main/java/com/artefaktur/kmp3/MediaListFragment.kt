@@ -40,7 +40,8 @@ class MediaListFragment : BaseRecycleSearchFragment<Media>() {
   }
 
   override fun ajustMenu(mainActivity: MainActivity) {
-    val menuFilter = mainActivity.menu.findItem(R.id.menu_filter);
+    resetMenu(mainActivity)
+    val menuFilter = mainActivity.menu.findItem(R.id.menu_filter)
     menuFilter?.let { menuFilter.setVisible(true) }
   }
 
@@ -59,10 +60,10 @@ class MediaListFragment : BaseRecycleSearchFragment<Media>() {
   fun refreshList() {
     var list = originElements
     if (filterUnheared == true) {
-      val usedb = Mp3UsageDb.getInstance().db
+      val db = getMainActivity().intDb
 
       list = list.filter {
-        (usedb.getMediaUsage(it.pk)?.count ?: 0) <= 0
+        db.getHearCount(it) <= 0
       }
     }
     filteredElements = list

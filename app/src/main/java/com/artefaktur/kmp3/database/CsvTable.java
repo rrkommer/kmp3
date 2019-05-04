@@ -30,7 +30,7 @@ import java.util.*;
  */
 public class CsvTable
 {
-  List<String[]> table = new ArrayList<String[]>();
+  public List<String[]> table = new ArrayList<String[]>();
 
   private char fieldSeperator = '|';
 

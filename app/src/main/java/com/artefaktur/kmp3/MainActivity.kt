@@ -1,5 +1,6 @@
 package com.artefaktur.kmp3
 
+import android.arch.persistence.room.Room
 import android.content.Context
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +19,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.widget.TextView
 import com.artefaktur.kmp3.database.Track
+import com.artefaktur.kmp3.intdb.IntDatabase
 
 
 class MainActivity : AppCompatActivity(),
@@ -34,6 +36,8 @@ class MainActivity : AppCompatActivity(),
   var lastFragment: BaseFragment? = null
   lateinit var menu: Menu
   var searchOpen: Boolean = false
+  lateinit var intDb: IntDatabase
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
@@ -46,9 +50,17 @@ class MainActivity : AppCompatActivity(),
     }
     createToolbar()
     INSTANCE = this
+    createDb()
   }
 
-  fun createToolbar() {
+  private fun createDb() {
+    intDb = Room.databaseBuilder(
+      applicationContext, IntDatabase::class.java, "kmp3"
+    ).allowMainThreadQueries().build()
+    intDb.initData()
+  }
+
+  private fun createToolbar() {
     val myToolbar = findViewById<View>(R.id.toolbar) as Toolbar
     myToolbar.setTitle("")
     setSupportActionBar(myToolbar)
