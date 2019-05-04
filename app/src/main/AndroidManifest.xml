@@ -2,7 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.artefaktur.kmp3">
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <!-- may not work -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="    android.permission.MANAGE_DOCUMENTS" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <application
@@ -22,6 +24,7 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+
         </activity>
         <service android:name="com.artefaktur.kmp3.player.PlayerService" />
     </application>

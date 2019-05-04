@@ -1,7 +1,9 @@
 package com.artefaktur.kmp3
 
+import android.app.Activity
 import android.arch.persistence.room.Room
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity;
 import com.artefaktur.ourmp3.player.MediaPlayerHolder
@@ -14,6 +16,7 @@ import kotlinx.android.synthetic.main.activity_main.view.*
 import kotlinx.android.synthetic.main.search_toolbar.*
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -173,7 +176,15 @@ class MainActivity : AppCompatActivity(),
     }
   }
 
+  override fun onActivityResult(requestCode: Int, resultCode: Int, resultData: Intent?) {
+    if (requestCode == SettingsDialog.WRITE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+      resultData?.data?.also { uri ->
+        Log.i("", "Uri: $uri")
+        //showImage(uri)
+      }
 
+    }
+  }
   fun getSettings(): AppSettings {
     val packageName = "com.artefaktur.kmp3"
     return AppSettings(getSharedPreferences(packageName, Context.MODE_PRIVATE))
