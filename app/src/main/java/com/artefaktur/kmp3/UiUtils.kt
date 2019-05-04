@@ -26,6 +26,7 @@ public fun doTrans(callback: FragmentTransaction.() -> Unit) {
 
 public fun goMainLink(fragment: Fragment) {
     pushClient(fragment, R.id.main_replacement)
+
 }
 
 public fun pushClient(fragment: Fragment, id: Int) {
@@ -37,6 +38,9 @@ public fun pushClient(fragment: Fragment, id: Int) {
         setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
         if (fragment is BaseFragment) {
             ma.lastFragment = fragment
+            if (fragment is BaseFragment){
+                fragment.ajustMenu(ma)
+            }
         } else {
             ma.lastFragment = null
         }

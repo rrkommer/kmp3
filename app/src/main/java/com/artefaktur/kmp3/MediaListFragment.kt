@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import com.artefaktur.kmp3.database.Composer
@@ -13,36 +14,68 @@ import org.apache.commons.lang3.StringUtils
 
 
 class MediaListFragment : BaseRecycleSearchFragment<Media>() {
-    lateinit var mediaList: List<Media>
+  lateinit var mediaList: List<Media>
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_medialist_list, container, false)
+  var filterUnheared = false
+  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    val view = inflater.inflate(R.layout.fragment_medialist_list, container, false)
 
-        with(view as RecyclerView) {
-            val mlva = MediaListRecyclerViewAdapter(mediaList)
-            layoutManager = LinearLayoutManager(context)
-            adapter = mlva
-            initElements(mediaList, view, mlva)
-        }
-        return view
+    with(view as RecyclerView) {
+      val mlva = MediaListRecyclerViewAdapter(mediaList)
+      layoutManager = LinearLayoutManager(context)
+      adapter = mlva
+      initElements(mediaList, view, mlva)
     }
+    return view
+  }
 
-    override fun filter(text: String): List<Media> {
-        val found = mutableListOf<Media>()
-        for (c in originElements) {
-            if (StringUtils.containsIgnoreCase(c.name1, text) == true) {
-                found.add(c)
-            }
-        }
-        return found
+  override fun filter(text: String): List<Media> {
+    val found = mutableListOf<Media>()
+    for (c in originElements) {
+      if (StringUtils.containsIgnoreCase(c.name1, text) == true) {
+        found.add(c)
+      }
     }
+    return found
+  }
 
-    companion object {
-        @JvmStatic
-        fun newInstance(mediaList: List<Media>): MediaListFragment {
-            val ret = MediaListFragment()
-            ret.mediaList = mediaList
-            return ret
-        }
+  override fun ajustMenu(mainActivity: MainActivity) {
+    val menuFilter = mainActivity.menu.findItem(R.id.menu_filter);
+    menuFilter?.let { menuFilter.setVisible(true) }
+  }
+
+  override fun handleMenuItem(mainActivity: MainActivity, item: MenuItem): Boolean {
+    if (item.itemId == R.id.menu_filter_unheared) {
+      filterUnheared = !filterUnheared
+      mainActivity.menu.findItem(R.id.menu_filter_unheared)?.let {
+        it.setTitle(if (filterUnheared) "WithListened" else "Unheared")
+      }
+      refreshList()
+      return true
     }
+    return false
+  }
+
+  fun refreshList() {
+    var list = originElements
+    if (filterUnheared == true) {
+      val usedb = Mp3UsageDb.getInstance().db
+
+      list = list.filter {
+        (usedb.getMediaUsage(it.pk)?.count ?: 0) <= 0
+      }
+    }
+    filteredElements = list
+    adapter.elements = filteredElements
+    adapter.notifyDataSetChanged()
+  }
+
+  companion object {
+    @JvmStatic
+    fun newInstance(mediaList: List<Media>): MediaListFragment {
+      val ret = MediaListFragment()
+      ret.mediaList = mediaList
+      return ret
+    }
+  }
 }

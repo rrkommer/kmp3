@@ -79,7 +79,6 @@ class MediaDetailFragment : BaseFragment(), PlayerStatusReceiver {
         sb.append(spannable {
           normal("Last Played: ${it.dateString}: ${it.count}: ") +
                   clickSpan(normal("<Unuse>\n")) {
-
                     usedb.downMediaUsage(media.pk)
                   }
         })
