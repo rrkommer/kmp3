@@ -5,6 +5,8 @@ import android.arch.persistence.room.Room
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentTransaction
 import android.support.v7.app.AppCompatActivity;
 import com.artefaktur.ourmp3.player.MediaPlayerHolder
 
@@ -23,6 +25,7 @@ import android.view.MenuItem
 import android.widget.TextView
 import com.artefaktur.kmp3.database.Track
 import com.artefaktur.kmp3.intdb.IntDatabase
+import java.util.*
 
 
 class MainActivity : AppCompatActivity(),
@@ -36,7 +39,9 @@ class MainActivity : AppCompatActivity(),
   lateinit var mediaPlayerHolder: MediaPlayerHolder
   lateinit var playerFragment: PlayerFragment
   lateinit var homeFragment: HomeFragment
+
   var lastFragment: BaseFragment? = null
+  val fragmentStack = Stack<BaseFragment>()
   lateinit var menu: Menu
   var searchOpen: Boolean = false
   lateinit var intDb: IntDatabase
@@ -50,6 +55,7 @@ class MainActivity : AppCompatActivity(),
       playerFragment = PlayerFragment.newInstance(this@MainActivity)
       replace(R.id.main_replacement, homeFragment)
       replace(R.id.player_replacement, playerFragment)
+      fragmentStack.push(homeFragment)
     }
     createToolbar()
     INSTANCE = this
@@ -73,12 +79,12 @@ class MainActivity : AppCompatActivity(),
       supportFragmentManager.transaction {
         replace(R.id.main_replacement, homeFragment)
       }
+      homeFragment.ajustMenu(this)
     }
     myToolbar.toolbar_back_button.setOnClickListener {
       if (searchOpen) {
         resetSearch()
       } else {
-
         onBackPressed()
       }
     }
@@ -112,7 +118,11 @@ class MainActivity : AppCompatActivity(),
     search_bar_button.setOnClickListener {
       search_toolbar.visibility = View.GONE
     }
-
+//    supportFragmentManager.addOnBackStackChangedListener {
+//      val count = supportFragmentManager.backStackEntryCount
+//      val be = supportFragmentManager.getBackStackEntryAt(count - 1)
+//
+//    }
   }
 
   override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -155,6 +165,45 @@ class MainActivity : AppCompatActivity(),
     search_toolbar.visibility = View.GONE
   }
 
+  override fun onBackPressed() {
+    supportFragmentManager.backStackEntryCount
+    val frags = supportFragmentManager.fragments
+
+    super.onBackPressed()
+
+    if (fragmentStack.size == 1) {
+      lastFragment = fragmentStack.peek()
+    } else if (fragmentStack.size > 1) {
+      lastFragment = fragmentStack.pop()
+    }
+    lastFragment?.let {
+      it.ajustMenu(this)
+    }
+//    val nl = lastFragment
+
+  }
+
+  fun pushClient(fragment: Fragment, id: Int) {
+    doTrans {
+
+      resetSearch()
+      replace(id, fragment)
+      addToBackStack(null)
+      setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+      if (fragment is BaseFragment) {
+        if (lastFragment != null) {
+          fragmentStack.push(lastFragment)
+        }
+        lastFragment = fragment
+        if (fragment is BaseFragment) {
+          fragment.ajustMenu(this@MainActivity)
+        }
+      } else {
+        lastFragment = null
+      }
+    }
+  }
+
   fun onMediaPlayerCreated(mediaPlayerHolder: MediaPlayerHolder) {
     this.mediaPlayerHolder = mediaPlayerHolder
     playerFragment.initWithMediaPlayer(mediaPlayerHolder)
@@ -176,15 +225,7 @@ class MainActivity : AppCompatActivity(),
     }
   }
 
-  override fun onActivityResult(requestCode: Int, resultCode: Int, resultData: Intent?) {
-    if (requestCode == SettingsDialog.WRITE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-      resultData?.data?.also { uri ->
-        Log.i("", "Uri: $uri")
-        //showImage(uri)
-      }
 
-    }
-  }
   fun getSettings(): AppSettings {
     val packageName = "com.artefaktur.kmp3"
     return AppSettings(getSharedPreferences(packageName, Context.MODE_PRIVATE))

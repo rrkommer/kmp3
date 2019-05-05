@@ -25,27 +25,11 @@ public fun doTrans(callback: FragmentTransaction.() -> Unit) {
 }
 
 public fun goMainLink(fragment: Fragment) {
-    pushClient(fragment, R.id.main_replacement)
+    getMainActivity().pushClient(fragment, R.id.main_replacement)
 
 }
 
-public fun pushClient(fragment: Fragment, id: Int) {
-    doTrans {
-        val ma = getMainActivity()
-        ma.resetSearch()
-        replace(id, fragment)
-        addToBackStack(null)
-        setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-        if (fragment is BaseFragment) {
-            ma.lastFragment = fragment
-            if (fragment is BaseFragment){
-                fragment.ajustMenu(ma)
-            }
-        } else {
-            ma.lastFragment = null
-        }
-    }
-}
+
 
 public fun toast(text: String) {
     Toast.makeText(getMainActivity(), text, Toast.LENGTH_LONG).show()

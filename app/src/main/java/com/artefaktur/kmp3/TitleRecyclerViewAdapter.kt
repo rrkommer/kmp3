@@ -27,8 +27,6 @@ class TitleRecyclerViewAdapter(
         val item = elements[position]
 
         holder.item_number.text = item.titleName
-
-
         with(holder.mView) {
             tag = item
             setOnClickListener {
@@ -38,7 +36,6 @@ class TitleRecyclerViewAdapter(
             }
         }
     }
-
 
     inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {
         val item_number: TextView = mView.item_number

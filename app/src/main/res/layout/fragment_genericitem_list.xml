@@ -7,21 +7,20 @@
               android:layout_height="wrap_content"
               android:orientation="horizontal">
     <android.support.v7.widget.RecyclerView
-            android:id="@+id/composerlist_recycler"
-            android:name="com.artefaktur.kmp3.ComposerListFragment"
+            android:id="@+id/generic_recyclerview"
+            android:name="com.artefaktur.kmp3.GenericItemFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             app:layoutManager="LinearLayoutManager"
-            tools:context=".ComposerListFragment"
-            tools:listitem="@layout/fragment_composerlist"/>
+            tools:context=".GenericItemFragment"
+            tools:listitem="@layout/fragment_genericitem"/>
 
     <com.artefaktur.kmp3.WaveView
-            android:id="@+id/composer_wave_view"
+            android:id="@+id/generic_wave_view"
             android:layout_width="match_parent"
             wave:sidebarAccentColor="?attr/colorAccent"
             wave:sidebarLettersColor="?attr/icon_color"
             android:layout_height="match_parent"/>
-
 </LinearLayout>

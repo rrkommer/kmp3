@@ -18,6 +18,7 @@ package com.artefaktur.kmp3.database;
 
 import com.artefaktur.kmp3.Mp3UsageDb;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.*;
@@ -177,7 +178,18 @@ public class Mp3Db {
     }
     return ret;
   }
-
+  public List<Media> getMediaFromOrchester(Orchester orchester) {
+    Set<Media> ret = new HashSet<Media>();
+    for (String[] od : orchestersDetail.table) {
+      if (od.length >= 2) {
+        if (StringUtils.equals(od[0], orchester.getName()) == true) {
+          Title title = getTitleByPk(od[1]);
+          ret.add(title.getMedia());
+        }
+      }
+    }
+    return new ArrayList<Media>(ret);
+  }
   public List<Title> getTitelsFromInterpret(Interpret interpret) {
     List<Title> ret = new ArrayList<Title>();
     for (String[] od : interpretsDetail.table) {
@@ -189,7 +201,19 @@ public class Mp3Db {
     }
     return ret;
   }
-
+  @NotNull
+  public List<Media> getMediaFromInterpret(@NotNull Interpret item) {
+    Set<Media> ret = new HashSet<Media>();
+    for (String[] od : interpretsDetail.table) {
+      if (od.length >= 3) {
+        if (StringUtils.equals(od[0], item.getName()) == true) {
+          Title title = getTitleByPk(od[2]);
+          ret.add(title.getMedia());
+        }
+      }
+    }
+    return new ArrayList<Media>(ret);
+  }
   public Composer getComposerByPk(String pk) {
     return new Composer(this, composers.findFirst(Composer.PK, pk));
   }
@@ -316,6 +340,9 @@ public class Mp3Db {
 
   public Dirigent getDirigentByPk(String pk) {
     return new Dirigent(this, dirigents.findFirst(Dirigent.PK, pk));
+  }
+  public Dirigent getDirigentByName(String name) {
+    return new Dirigent(this, dirigents.findFirst(Dirigent.NAME, name));
   }
 
   public File getMp3root() {
@@ -459,7 +486,9 @@ public class Mp3Db {
     }
     return ret;
   }
-
+  public List<Orchester> getOrchesterByTitel(Title titel) {
+    return getOrchesterByTitel(titel.getPk());
+  }
   public List<Orchester> getOrchesterByTitel(String pk) {
     List<String[]> orl = orchestersDetail.findEquals(1, pk);
     List<Orchester> ret = new ArrayList<Orchester>(orl.size());
@@ -478,6 +507,17 @@ public class Mp3Db {
       ret.add(new Title(this, t));
     }
     return ret;
+  }
+  @NotNull
+  public List<Media> getMediaFromDirigent(@NotNull Dirigent dirigent) {
+
+    Set<Media> ret = new HashSet<Media>();
+    List<String[]> fl = title.findEquals(Title.DIRIGENT, dirigent.getName());
+    for (String[] rec : fl) {
+      Media media = new Title(this, rec).getMedia();
+      ret.add(media);
+    }
+    return new ArrayList<Media>(ret);
   }
 
 

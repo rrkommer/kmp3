@@ -20,10 +20,29 @@ class TitleDetailFragment : BaseFragment(), PlayerStatusReceiver {
 
   lateinit var title: Title
   lateinit var trackFragment: TrackFragment
+  private fun appendCol(sb: StringBuilder, key: String, value: String?): StringBuilder {
+    if (value.isNullOrBlank()) {
+      return sb
+    }
+    if (sb.length > 0) {
+      sb.append(";")
+    }
+    sb.append(key).append(": ").append(value)
+    return sb
+  }
+
   fun createDetailView(): Spannable {
     val sb = SpannableStringBuilder()
+    var t2 = title.get(Title.TITEL2)
+    if (t2.isNotBlank()) {
+      t2 = t2 + "\n"
+    } else {
+      t2 = ""
+    }
+
     val res = spannable {
       bold(size(2.0f, title.titleName + "\n")) +
+              normal(t2) +
               clickSpan(size(1.5f, title.composerName + "\n")) {
                 val composer = title.db.getComposerByName(title.composerName)
                 if (composer != null) {
@@ -40,19 +59,48 @@ class TitleDetailFragment : BaseFragment(), PlayerStatusReceiver {
     }
 
     sb.append(res)
-    if (title.get(Title.DIRIGENT).isNotBlank()) {
-      sb.append("Dirigent: " + title.get(Title.DIRIGENT) + "\n")
+    val lb = StringBuilder()
+    appendCol(lb, "Gruppe", title.get(Title.GRUPPE))
+    appendCol(lb, "AF", title.get(Title.RECORDTYPE))
+    appendCol(lb, "Jahr", title.get(Title.YEAR))
+    appendCol(lb, "Einspielung", title.get(Title.EINSPIELUNG))
+    if (lb.length > 0) {
+      sb.append(lb.append("\n").toString())
+    }
+    val dirigent = title.get(Title.DIRIGENT)
+    if (dirigent.isNotBlank()) {
+      sb.append("Dirigent: ")
+      sb.append(clickSpan(normal(dirigent)) {
+        val dirigent = title.db.getDirigentByName(dirigent);
+        if (dirigent != null) {
+          goMainLink(GenericDetailFragment.newInstance(dirigent, DirigentItemContainer(listOf(dirigent))))
+        }
+      })
+      sb.append("\n")
+    }
+    val orchester = title.db.getOrchesterByTitel(title)
+    if (orchester.isNotEmpty()) {
+      sb.append("Orchester: ")
+      for (o in orchester) {
+        sb.append(clickSpan(normal(o.name)) {
+          goMainLink(GenericDetailFragment.newInstance(o, OrchesterItemContainer(listOf(o))))
+        })
+        sb.append(",")
+      }
+      sb.append("\n")
     }
     val interpreten = title.db.getInterpretByTitel(title)
     if (interpreten.isEmpty() == false) {
-      sb.append("Interperten: \n")
+      sb.append("Interperten: ")
       for (interpret in interpreten) {
-        sb.append(interpret.name)
-        if (interpret.instrument.isNotBlank()) {
-          sb.append(": ").append(interpret.instrument)
-        }
-        sb.append("\n")
+        val iname =
+          if (interpret.instrument.isNotBlank()) interpret.name + ": " + interpret.instrument else interpret.name
+        sb.append(clickSpan(normal(iname)) {
+          goMainLink(GenericDetailFragment.newInstance(interpret, InterpretItemContainer(listOf(interpret))))
+        })
+        sb.append(",")
       }
+      sb.append("\n")
     }
     return sb
   }

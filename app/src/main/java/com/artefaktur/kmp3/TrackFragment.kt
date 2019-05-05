@@ -23,6 +23,7 @@ class TrackFragment : Fragment(), PlayerStatusReceiver {
   lateinit var trackViewAdapter: TrackRecyclerViewAdapter
   lateinit var recyclerView: RecyclerView
   lateinit var layoutManager: LinearLayoutManager
+
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
     recyclerView = inflater.inflate(R.layout.fragment_track_list, container, false) as RecyclerView
     layoutManager = LinearLayoutManager(context)
