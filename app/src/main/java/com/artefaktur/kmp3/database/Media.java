@@ -232,6 +232,13 @@ public class Media extends RecBaseWithPk implements EntityWithTracks {
         } else {
             imagePk = getImageFront();
         }
+        if (StringUtils.isNotBlank(imagePk) == true) {
+            File f = db.getDirectFile(imagePk);
+            if (f != null) {
+                return f;
+            }
+            f = db.getBookletFile(imagePk, imageBack);
+        }
         String jpcImagePk = getJpcId();
         File f = db.getJpcBookletFile(jpcImagePk, imageBack);
         if (f != null) {

@@ -23,8 +23,9 @@ class HomeFragment : BaseFragment() {
       getMainActivity().pushClient(f, R.id.main_replacement)
     }
     view.home_button_medialist.setOnClickListener {
-      val sortedMedia = ArrayList(Mp3Db.getDb().media)
+      var sortedMedia = ArrayList(Mp3Db.getDb().media)
       val sortedl = sortedMedia.sortedByDescending { it.createdDate }
+
       val f = MediaListFragment.newInstance(sortedl)
       getMainActivity().pushClient(f, R.id.main_replacement)
     }

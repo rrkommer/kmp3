@@ -14,17 +14,23 @@ import org.apache.commons.lang3.StringUtils
 
 
 class MediaListFragment : BaseRecycleSearchFragment<Media>() {
+  var withFilter: Boolean = false
   lateinit var mediaList: List<Media>
 
   var filterUnheared = false
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
     val view = inflater.inflate(R.layout.fragment_medialist_list, container, false)
-
+    val settings = getMainActivity().getSettings()
+    filterUnheared = settings.onlyUnhearedMedia
     with(view as RecyclerView) {
       val mlva = MediaListRecyclerViewAdapter(mediaList)
       layoutManager = LinearLayoutManager(context)
       adapter = mlva
-      initElements(mediaList, view, mlva)
+      var list = mediaList
+     initElements(list, view, mlva)
+      if (withFilter == true && filterUnheared == true) {
+        refreshList()
+      }
     }
     return view
   }
@@ -50,6 +56,8 @@ class MediaListFragment : BaseRecycleSearchFragment<Media>() {
       filterUnheared = !filterUnheared
       mainActivity.menu.findItem(R.id.menu_filter_unheared)?.let {
         it.setTitle(if (filterUnheared) "WithListened" else "Unheared")
+        val settings = getMainActivity().getSettings()
+        settings.onlyUnhearedMedia = filterUnheared
       }
       refreshList()
       return true
@@ -72,10 +80,12 @@ class MediaListFragment : BaseRecycleSearchFragment<Media>() {
   }
 
   companion object {
+
     @JvmStatic
-    fun newInstance(mediaList: List<Media>): MediaListFragment {
+    fun newInstance(mediaList: List<Media>, withFilter: Boolean = false): MediaListFragment {
       val ret = MediaListFragment()
       ret.mediaList = mediaList
+      ret.withFilter = true
       return ret
     }
   }

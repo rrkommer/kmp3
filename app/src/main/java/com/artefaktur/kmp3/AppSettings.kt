@@ -5,6 +5,13 @@ import android.content.SharedPreferences
 
 
 class AppSettings(val preferences: SharedPreferences) {
+  companion object {
+    const val FILTER_UNHEARED = "media.filter.unheared"
+  }
+
+  var onlyUnhearedMedia: Boolean
+    get() = preferences.getBoolean(FILTER_UNHEARED, false)
+    set(value) = preferences.edit().putBoolean(FILTER_UNHEARED, value).apply()
 
   fun getMp3Root(): String {
     val ret = preferences.getString("mp3root", "/storage/3633-6130/ourMP3/")
@@ -17,4 +24,5 @@ class AppSettings(val preferences: SharedPreferences) {
   fun storeMp3Root(rootDir: String) {
     preferences.edit().putString("mp3root", rootDir).apply()
   }
+
 }
