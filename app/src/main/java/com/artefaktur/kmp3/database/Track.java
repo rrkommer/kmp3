@@ -75,7 +75,6 @@ public class Track extends RecBaseWithPk {
   }
 
 
-
   static String[] buildRecFromFile(Title title, File mp3file, int no) {
 
     String[] rec = new String[REC_SICE];
@@ -152,7 +151,7 @@ public class Track extends RecBaseWithPk {
     return sb.toString();
   }
 
-  public long getTime() {
+  public long getTimeFromMp3() {
     try {
       MediaMetadataRetriever metaRetriever = new MediaMetadataRetriever();
       metaRetriever.setDataSource(getMp3Path().getAbsolutePath());
@@ -177,6 +176,10 @@ public class Track extends RecBaseWithPk {
 //      Log.error(ex);
       ex.printStackTrace();
     }
+    return getTrackTime();
+  }
+
+  public long getTrackTime() {
     String l = get(LENGTH);
     if (StringUtils.isBlank(l) == true) {
       return 0;

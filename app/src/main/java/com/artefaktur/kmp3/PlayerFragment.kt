@@ -166,7 +166,7 @@ class PlayerFragment : BaseFragment() {
       Log.e("", "No song selected")
       return
     }
-    val durationLong = track.time
+    val durationLong = track.timeFromMp3
     seekTo.max = durationLong.toInt()
     duration.text = MusicUtils.formatSongDuration(durationLong)
     val title = track.title

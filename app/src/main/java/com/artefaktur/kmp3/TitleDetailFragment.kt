@@ -62,7 +62,7 @@ class TitleDetailFragment : BaseFragment(), PlayerStatusReceiver {
     val lb = StringBuilder()
     appendCol(lb, "Gruppe", title.get(Title.GRUPPE))
     appendCol(lb, "AF", title.get(Title.RECORDTYPE))
-    appendCol(lb, "Jahr", title.get(Title.YEAR))
+    appendCol(lb, "Jahr", title.get(Title.RECORDYEAR))
     appendCol(lb, "Einspielung", title.get(Title.EINSPIELUNG))
     if (lb.length > 0) {
       sb.append(lb.append("\n").toString())

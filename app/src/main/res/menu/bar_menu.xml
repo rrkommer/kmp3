@@ -9,7 +9,50 @@
           android:visible="false">
         <menu>
             <item android:id="@+id/menu_filter_unheared"
-                  android:title="Unheared"/>
+                  android:title="Unheared"
+                  app:showAsAction="ifRoom|withText"
+                  app:actionViewClass="android.widget.CheckBox/>
+            <item android:id="@+id/menu_filter_byrate"
+                  android:title="By Rate">
+                <menu>
+                    <item android:id="@+id/menu_filter_all_rate"
+                          android:title="All"
+                          android:checkable="true"
+                          app:showAsAction="ifRoom|withText"
+                          app:actionViewClass="android.widget.CheckBox"
+                    />
+                    <item android:id="@+id/menu_filter_rate5"
+                          android:title="*****"
+                          android:checkable="true"
+                          app:showAsAction="ifRoom|withText"
+                          app:actionViewClass="android.widget.CheckBox"
+                    />
+                    <item android:id="@+id/menu_filter_rate4"
+                          android:title="****"
+                          android:checkable="true"
+                          app:showAsAction="ifRoom|withText"
+                          app:actionViewClass="android.widget.CheckBox"
+                    />
+                    <item android:id="@+id/menu_filter_rate3"
+                          android:title="***"
+                          android:checkable="true"
+                          app:showAsAction="ifRoom|withText"
+                          app:actionViewClass="android.widget.CheckBox"
+                    />
+                    <item android:id="@+id/menu_filter_rate2"
+                          android:title="**"
+                          android:checkable="true"
+                          app:showAsAction="ifRoom|withText"
+                          app:actionViewClass="android.widget.CheckBox"
+                    />
+                    <item android:id="@+id/menu_filter_rate1"
+                          android:title="*"
+                          android:checkable="true"
+                          app:showAsAction="ifRoom|withText"
+                          app:actionViewClass="android.widget.CheckBox"
+                    />
+                </menu>
+            </item>
         </menu>
     </item>
     <item android:id="@+id/menu_rate"

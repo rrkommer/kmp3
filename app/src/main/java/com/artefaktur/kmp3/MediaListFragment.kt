@@ -17,18 +17,20 @@ class MediaListFragment : BaseRecycleSearchFragment<Media>() {
   var withFilter: Boolean = false
   lateinit var mediaList: List<Media>
 
-  var filterUnheared = false
+
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
     val view = inflater.inflate(R.layout.fragment_medialist_list, container, false)
     val settings = getMainActivity().getSettings()
-    filterUnheared = settings.onlyUnhearedMedia
+
+    updateMenuStatus()
     with(view as RecyclerView) {
       val mlva = MediaListRecyclerViewAdapter(mediaList)
       layoutManager = LinearLayoutManager(context)
       adapter = mlva
       var list = mediaList
-     initElements(list, view, mlva)
-      if (withFilter == true && filterUnheared == true) {
+      initElements(list, view, mlva)
+
+      if (withFilter == true || settings.onlyUnhearedMedia == true || settings.mediaStars != -1) {
         refreshList()
       }
     }
@@ -51,27 +53,123 @@ class MediaListFragment : BaseRecycleSearchFragment<Media>() {
     menuFilter?.let { menuFilter.setVisible(true) }
   }
 
+  private fun getRatingByMenu(id: Int): Int {
+    return when (id) {
+      R.id.menu_filter_all_rate -> -1
+      R.id.menu_filter_rate5 -> 5
+      R.id.menu_filter_rate4 -> 4
+      R.id.menu_filter_rate3 -> 3
+      R.id.menu_filter_rate2 -> 2
+      R.id.menu_filter_rate1 -> 1
+      else -> -1
+    }
+  }
+
   override fun handleMenuItem(mainActivity: MainActivity, item: MenuItem): Boolean {
-    if (item.itemId == R.id.menu_filter_unheared) {
-      filterUnheared = !filterUnheared
-      mainActivity.menu.findItem(R.id.menu_filter_unheared)?.let {
-        it.setTitle(if (filterUnheared) "WithListened" else "Unheared")
+    when (item.itemId) {
+      R.id.menu_filter_unheared -> {
         val settings = getMainActivity().getSettings()
-        settings.onlyUnhearedMedia = filterUnheared
+        setUnheared(settings.onlyUnhearedMedia == false)
+        return true
       }
-      refreshList()
-      return true
+
+      R.id.menu_filter_all_rate, R.id.menu_filter_rate5, R.id.menu_filter_rate4, R.id.menu_filter_rate3, R.id.menu_filter_rate2, R.id.menu_filter_rate1 -> {
+        val filterRatings = getRatingByMenu(item.itemId)
+        getMainActivity().getSettings().mediaStars = filterRatings
+        if (filterRatings != -1) {
+          getMainActivity().getSettings().onlyUnhearedMedia = false
+        }
+        updateMenuStatus()
+        refreshList()
+      }
     }
     return false
   }
 
+  private fun setUnheared(unheared: Boolean) {
+    val settings = getMainActivity().getSettings()
+
+    settings.onlyUnhearedMedia = unheared
+    getMainActivity().menu.findItem(R.id.menu_filter_unheared)?.let {
+      it.setChecked(unheared)
+      it.setTitle(if (settings.onlyUnhearedMedia) "WithListened" else "Unheared")
+    }
+    if (unheared == true) {
+      settings.mediaStars = -1
+      updateMenuStatus()
+    }
+    refreshList()
+  }
+
+  private fun updateMenuStatus() {
+    val ma = getMainActivity()
+    val settings = ma.getSettings()
+    ma.menu.findItem(R.id.menu_filter_rate5)?.let {
+      it.setChecked(false)
+    }
+    ma.menu.findItem(R.id.menu_filter_rate4)?.let {
+      it.setChecked(false)
+    }
+    ma.menu.findItem(R.id.menu_filter_rate3)?.let {
+      it.setChecked(false)
+    }
+    ma.menu.findItem(R.id.menu_filter_rate2)?.let {
+      it.setChecked(false)
+    }
+    ma.menu.findItem(R.id.menu_filter_rate1)?.let {
+      it.setChecked(false)
+    }
+    ma.menu.findItem(R.id.menu_filter_all_rate)?.let {
+      it.setChecked(false)
+    }
+    when (settings.mediaStars) {
+      -1 -> {
+        ma.menu.findItem(R.id.menu_filter_all_rate)?.let {
+          it.setChecked(true)
+        }
+      }
+      5 -> {
+        ma.menu.findItem(R.id.menu_filter_rate5)?.let {
+          it.setChecked(true)
+        }
+      }
+      4 -> {
+        ma.menu.findItem(R.id.menu_filter_rate4)?.let {
+          it.setChecked(true)
+        }
+      }
+      3 -> {
+        ma.menu.findItem(R.id.menu_filter_rate3)?.let {
+          it.setChecked(true)
+        }
+      }
+      2 -> {
+        ma.menu.findItem(R.id.menu_filter_rate2)?.let {
+          it.setChecked(true)
+        }
+      }
+      1 -> {
+        ma.menu.findItem(R.id.menu_filter_rate1)?.let {
+          it.setChecked(true)
+        }
+      }
+      else -> {
+      }
+    }
+  }
+
   fun refreshList() {
     var list = originElements
-    if (filterUnheared == true) {
-      val db = getMainActivity().intDb
-
+    val db = getMainActivity().intDb
+    if (settings.onlyUnhearedMedia == true) {
       list = list.filter {
         db.getHearCount(it) <= 0
+      }
+    }
+    val filterStars = getMainActivity().getSettings().mediaStars
+    if (filterStars != -1) {
+      list = list.filter {
+        db.getRating(it) == filterStars
       }
     }
     filteredElements = list

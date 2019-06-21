@@ -56,7 +56,9 @@ abstract class IntDatabase : RoomDatabase() {
   fun getHearCount(media: Media): Int {
     return mediaDao().findByMediaId(media.pk)?.usage ?: 0
   }
-
+  fun getRating(media: Media): Int {
+    return mediaDao().findByMediaId(media.pk)?.rating ?: -1
+  }
   fun initData() {
     val dao = mediaDao()
 //    dao.nukeTable()

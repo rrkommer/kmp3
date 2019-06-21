@@ -40,6 +40,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/home_button_dirigent"/>
+
+        <Button
+                android:text="Stats"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/home_button_stats"/>
     </LinearLayout>
 
 </FrameLayout>

@@ -2,14 +2,10 @@ package com.artefaktur.kmp3
 
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.text.TextUtils.replace
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.artefaktur.kmp3.database.Mp3Db
-import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_home.view.*
 
 
@@ -45,6 +41,10 @@ class HomeFragment : BaseFragment() {
       val sortedl = Mp3Db.getDb().dirigenten.sortedBy { it.name }
       val itemContainer = DirigentItemContainer(sortedl)
       val frag = GenericItemFragment.newInstance(itemContainer)
+      getMainActivity().pushClient(frag, R.id.main_replacement)
+    }
+    view.home_button_stats.setOnClickListener {
+      val frag =  StatsFragement()
       getMainActivity().pushClient(frag, R.id.main_replacement)
     }
     return view

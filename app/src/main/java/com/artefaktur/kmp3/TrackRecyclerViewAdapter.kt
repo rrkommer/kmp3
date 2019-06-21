@@ -48,7 +48,7 @@ class TrackRecyclerViewAdapter(
     } else {
       holder.track_list_titel.visibility = View.GONE
     }
-    val times = MusicUtils.formatSongDuration(item.time)
+    val times = MusicUtils.formatSongDuration(item.timeFromMp3)
     holder.item_number.text = "" + (position + 1)
     val curPlayingTrack = currentTrackPlaying()
 //    val noncur = "<null>"

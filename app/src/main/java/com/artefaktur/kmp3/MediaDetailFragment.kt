@@ -66,24 +66,37 @@ class MediaDetailFragment : BaseFragment(), PlayerStatusReceiver {
   }
 
   fun createDetailView(): Spannable {
+    val db = getMainActivity().intDb
+    val composerList = media.titleList.map { it.composer }.toSet()
+
     val sb = SpannableStringBuilder()
-    sb.append(bold(size(2.0f, media.name1 + "\n")))
+    sb.append(bold(size(1.5f, media.name1 + "\n")))
     if (media.name2.isNotBlank() == true) {
-      sb.append(bold(size(1.5f, media.name2 + "\n")))
+      sb.append(bold(size(1.0f, media.name2 + "\n")))
     }
     if (media.name3.isNotBlank() == true) {
-      sb.append(bold(size(1.5f, media.name2 + "\n")))
+      sb.append(bold(size(1.0f, media.name2 + "\n")))
     }
-    val db = getMainActivity().intDb
+    sb.append("Composer:")
+    for (composer in composerList) {
+      sb.append(" ")
+      sb.append(clickSpan(normal(composer.name)) {
+        goMainLink(ComposerDetailFragment.newInstance(composer))
+      })
+    }
     val mediaUsage = db.mediaDao().findByMediaId(media.pk)
 
-    sb.append("Label: ${media.label}")
+    sb.append("\nLabel: ${media.label}")
     if (mediaUsage != null && mediaUsage.rating > 0) {
       sb.append("        [${mediaUsage.ratingAsStars()}]")
     }
     sb.append("\n")
+    val mediaCount = media.getMediaCount()
+    if (mediaCount != 1) {
+      sb.append("Medien: " + mediaCount + "\n")
+    }
     sb.append("InDb: ${media.dateInDb}\n")
-    db.mediaDao().findByMediaId(media.pk)?.let {
+    mediaUsage?.let {
       if (it.usage > 0) {
         sb.append(spannable {
           normal("Last Played: ${it.lastHeared.toIsoString()}: ${it.usage}: ") +

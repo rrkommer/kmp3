@@ -2,6 +2,7 @@ package com.artefaktur.kmp3
 
 import android.support.v4.app.FragmentTransaction
 import android.support.v7.widget.RecyclerView
+import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -63,7 +64,9 @@ class ComposerListRecyclerViewAdapter(
 
   override fun onBindViewHolder(holder: ViewHolder, position: Int) {
     val item = elements[position]
-    holder.mIdView.text = item.name
+    val sb = SpannableStringBuilder()
+    sb.append(item.name + " ").append(size(.7f, "(" + item.bornYear + "-" + item.diedYear + "), " + item.country))
+    holder.mIdView.text = sb
     with(holder.mView) {
       tag = item
       setOnClickListener(mOnClickListener)
