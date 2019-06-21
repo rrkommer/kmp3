@@ -28,6 +28,9 @@ class StatsFragement : Fragment() {
     var handler: Handler = object : Handler() {
       override fun handleMessage(msg: Message) {
         toast("Stats Berechnet")
+        val settings = getMainActivity().getSettings()
+        settings.mp3FileSize = sumSize
+        settings.mp3Time = sumTime
       }
     }
 
@@ -41,10 +44,10 @@ class StatsFragement : Fragment() {
     var sumSize: Long = 0
     // seconds
     var sumTime: Long = 0
-    var numCalculated= 0
+    var numCalculated = 0
 
     fun startCalc() {
-      if (status != Status.UnCalc) {
+      if (status == Status.InCalc) {
         return
       }
       status = Status.InCalc
@@ -61,7 +64,9 @@ class StatsFragement : Fragment() {
               val filep = track.getMp3Path().getAbsolutePath()
               metaRetriever.setDataSource(track.getMp3Path().getAbsolutePath())
               val duration = metaRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
-              sumTimeC += java.lang.Long.parseLong(duration)
+              if (duration != null) {
+                sumTimeC += java.lang.Long.parseLong(duration)
+              }
               sumSizeC += File(filep).length()
             } catch (ex: Exception) {
             }
@@ -70,6 +75,7 @@ class StatsFragement : Fragment() {
           StatsFragement.sumSize = sumSizeC
           StatsFragement.sumTime = sumTimeC
           StatsFragement.status = Companion.Status.Calculated
+
           handler.sendMessage(Message())
         }
       }
@@ -90,24 +96,19 @@ class StatsFragement : Fragment() {
 
     sb.append("Medien: ${db.media.size}, Datenträger: ${mediacount}\n")
     sb.append("Titel: ${db.title.size()}\n")
-//    val sumSize = db.tracks.table.fold(0L) { cur, trackRow -> cur + Track(db, trackRow).size}
-//    val sumtime = db.tracks.table.fold(0L) { cur, trackRow -> cur + Track(db, trackRow).trackTime }
-//    val sumtime = db.tracks.table.fold(0L) { cur, trackRow -> cur + Track(db, trackRow).timeFromMp3 }
-//    val sumHours = sumtime / (60 * 60)
-//    val sumDays = sumtime / (60 * 60 * 24)
-//    val restHours = (sumtime % (60 * 60 * 24)) / (60 * 60)
-//    val sumMb = sumSize / (1024 * 124)
-//    val sumGb = sumMb / 1024
-    startCalc()
+
     sb.append("Tracks: ${db.tracks.size()}\n")
-    if (status == Companion.Status.Calculated) {
-      val sumHours = sumTime / (60 * 60)
-      val sumDays = sumTime / (60 * 60 * 24)
-      val restHours = (sumTime % (60 * 60 * 24)) / (60 * 60)
-      val sumMb = sumSize / (1024 * 124)
-      val sumGb = sumMb / 1024
-      sb.append(" Days: ${sumDays}:${restHours} or ${sumHours} Total Hours. Size: ${sumGb} GB\n")
-    } else {
+    val settings = getMainActivity().getSettings()
+    val sumSize = settings.mp3FileSize
+    val sumTime = settings.mp3Time
+
+    val sumHours = sumTime / (60 * 60 * 1000)
+    val sumDays = sumTime / (60 * 60 * 24)
+    val restHours = (sumTime % (60 * 60 * 24)) / (60 * 60)
+    val sumMb = sumSize / (1024 * 1240)
+    val sumGb = sumMb / 1024
+    sb.append(" Days: ${sumDays}:${restHours} or ${sumHours} Total Hours. Size: ${sumGb} GB\n")
+    if (status == Companion.Status.InCalc) {
       sb.append(" In Calc: ${numCalculated} / ${db.tracks.table.size}\n")
     }
     sb.append("Orchester: ${db.orchester.size}\n")
@@ -115,6 +116,9 @@ class StatsFragement : Fragment() {
     sb.append("Interpreten: ${db.interpreten.size}\n")
 
     view.stats_details.text = sb
+    view.stats_button_recalc.setOnClickListener {
+      startCalc()
+    }
     return view
   }
 

@@ -160,7 +160,9 @@ class MediaListFragment : BaseRecycleSearchFragment<Media>() {
 
   fun refreshList() {
     var list = originElements
-    val db = getMainActivity().intDb
+    val ma = getMainActivity()
+    val db = ma.intDb
+    val settings = ma.getSettings()
     if (settings.onlyUnhearedMedia == true) {
       list = list.filter {
         db.getHearCount(it) <= 0
