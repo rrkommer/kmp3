@@ -101,13 +101,15 @@ class StatsFragement : Fragment() {
     val settings = getMainActivity().getSettings()
     val sumSize = settings.mp3FileSize
     val sumTime = settings.mp3Time
-
-    val sumHours = sumTime / (60 * 60 * 1000)
-    val sumDays = sumTime / (60 * 60 * 24)
-    val restHours = (sumTime % (60 * 60 * 24)) / (60 * 60)
+    val hourf = 60 * 60 * 1000
+    val sumHours = sumTime / hourf
+    val dayf =  24
+    val sumDays = sumHours / dayf
+    val resthmod = sumHours % dayf
+    val restHours = resthmod
     val sumMb = sumSize / (1024 * 1240)
     val sumGb = sumMb / 1024
-    sb.append(" Days: ${sumDays}:${restHours} or ${sumHours} Total Hours. Size: ${sumGb} GB\n")
+    sb.append("Days: ${sumDays}:${restHours} or ${sumHours} Total Hours. Size: ${sumGb} GB\n")
     if (status == Companion.Status.InCalc) {
       sb.append(" In Calc: ${numCalculated} / ${db.tracks.table.size}\n")
     }
@@ -115,7 +117,7 @@ class StatsFragement : Fragment() {
     sb.append("Dirigenten: ${db.dirigenten.size}\n")
     sb.append("Interpreten: ${db.interpreten.size}\n")
 
-    view.stats_details.text = sb
+    view.stats_details.text = size(1.2F, sb.toString())
     view.stats_button_recalc.setOnClickListener {
       startCalc()
     }

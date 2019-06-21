@@ -9,12 +9,13 @@ public abstract class RecBaseWithPk extends RecBase {
   }
 
   abstract String getPk();
+
   @Override
   public boolean equals(Object other) {
-    if ((other instanceof Track) == false) {
+    if ((other instanceof RecBaseWithPk) == false) {
       return false;
     }
-    Track otrack = (Track) other;
+    RecBaseWithPk otrack = (RecBaseWithPk) other;
     return StringUtils.equals(getPk(), otrack.getPk());
   }
 

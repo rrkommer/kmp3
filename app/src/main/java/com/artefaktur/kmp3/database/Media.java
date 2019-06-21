@@ -267,4 +267,13 @@ public class Media extends RecBaseWithPk implements EntityWithTracks {
     }
     return 1;
   }
-}
+
+  @Override
+  public boolean equals(Object other) {
+    if ((other instanceof Media) == false) {
+      return false;
+    }
+    return getPk().equals(((Media) other).getPk());
+  }
+
+ }

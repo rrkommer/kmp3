@@ -117,8 +117,5 @@ public class Composer extends RecBaseWithPk {
     return getPk().equals(((Composer) other).getPk());
   }
 
-  @Override
-  public int hashCode() {
-    return getPk().hashCode();
-  }
+
 }

@@ -82,7 +82,11 @@ class OrchesterItemContainer(items: List<Orchester>) : GenericItemContainer<Orch
 
   override fun getFirstLetter(item: Orchester): String {
     val name = item.name.trim()
-    return name.substring(0, 1)
+    if (name.length > 0) {
+      return name.substring(0, 1)
+    } else {
+      return "A"
+    }
   }
 
   override fun getMedienForItem(item: Orchester): List<Media> {
