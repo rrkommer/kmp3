@@ -22,6 +22,7 @@ import android.widget.LinearLayout
 import com.artefaktur.kmp3.database.Mp3Db
 import com.artefaktur.kmp3.database.Track
 import com.artefaktur.kmp3.intdb.toIsoString
+import com.artefaktur.kmp3.player.MusicUtils
 
 
 class MediaDetailFragment : BaseFragment(), PlayerStatusReceiver {
@@ -30,7 +31,11 @@ class MediaDetailFragment : BaseFragment(), PlayerStatusReceiver {
   var hasBackImage = false
   lateinit var trackFragment: TrackFragment
 
-  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+  override fun onCreateView(
+    inflater: LayoutInflater,
+    container: ViewGroup?,
+    savedInstanceState: Bundle?
+  ): View? {
     val view = inflater.inflate(R.layout.fragment_media_detail, container, false)
 
     view.media_detail_play_button.setOnClickListener {
@@ -44,7 +49,7 @@ class MediaDetailFragment : BaseFragment(), PlayerStatusReceiver {
         Log.w("", "No Track")
       }
     }
-    view.media_detail_name.text = createDetailView()
+    view.media_detail_name.text = createDetailView(view)
     view.media_detail_name.setMovementMethod(LinkMovementMethod.getInstance())
 
     showBooklet(view)
@@ -65,7 +70,7 @@ class MediaDetailFragment : BaseFragment(), PlayerStatusReceiver {
     trackFragment.onStopPlayTrack(track)
   }
 
-  fun createDetailView(): Spannable {
+  fun createDetailView(view: View): Spannable {
     val db = getMainActivity().intDb
     val composerList = media.titleList.map { it.composer }.toSet()
 
@@ -84,6 +89,7 @@ class MediaDetailFragment : BaseFragment(), PlayerStatusReceiver {
         goMainLink(ComposerDetailFragment.newInstance(composer))
       })
     }
+
     val mediaUsage = db.mediaDao().findByMediaId(media.pk)
 
     sb.append("\nLabel: ${media.label}")
@@ -92,8 +98,34 @@ class MediaDetailFragment : BaseFragment(), PlayerStatusReceiver {
     }
     sb.append("\n")
     val mediaCount = media.getMediaCount()
-    if (mediaCount != 1) {
-      sb.append("Medien: " + mediaCount + "\n")
+    val laufZeit = getLaufzeit()
+    sb.append("Medien: $mediaCount, Zeit: $laufZeit")
+    if (mediaUsage != null && mediaUsage.bookmark != null) {
+      sb.append("  ").append(clickSpan(normal("[-BOOK]")) {
+        db.setBookmark(media, null)
+        view.media_detail_name.text = createDetailView(view)
+      })
+    } else {
+      sb.append("  ").append(clickSpan(normal("[+BOOK]")) {
+        db.setBookmark(media, 1)
+        view.media_detail_name.text = createDetailView(view)
+      })
+    }
+    if (mediaUsage != null && mediaUsage.comment.isNullOrBlank() == false) {
+      sb.append("\nComment: ").append(clickSpan(normal(mediaUsage.comment!!)) {
+        openMediaDialog(view, mediaUsage.comment!!)
+      })
+    } else {
+      sb.append("  ").append(clickSpan(normal("[+COMMENT]")) {
+        openMediaDialog(view, "")
+      })
+    }
+    sb.append("\n")
+    val jpc = media.jpcId
+    if (jpc.isNullOrBlank() == false) {
+      sb.append(clickSpan(normal("JPC: $jpc\n")) {
+        openURL("https://www.jpc.de/jpcng/home/detail/-/hnum/${jpc}?iampartner=Anon")
+      })
     }
     sb.append("InDb: ${media.dateInDb}\n")
     mediaUsage?.let {
@@ -112,6 +144,21 @@ class MediaDetailFragment : BaseFragment(), PlayerStatusReceiver {
 //      }
 //    }
     return sb
+  }
+
+  private fun openMediaDialog(view: View, comment: String) {
+    val mcd = MediaCommentDialog()
+    mcd.mediaDetailView = view
+    mcd.comment = comment
+    mcd.media = media
+    mcd.mediaDetailFragment = this
+    goMainLink(mcd)
+  }
+
+  fun getLaufzeit(): String {
+    val tl = media.getTrackList()
+    val sumTime = tl.fold(0L) { acc, track -> acc + track.getTimeFromMp3() }
+    return MusicUtils.formatSongDuration(sumTime)
   }
 
   override fun ajustMenu(mainActivity: MainActivity) {
@@ -168,7 +215,8 @@ class MediaDetailFragment : BaseFragment(), PlayerStatusReceiver {
       //LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT)
         LinearLayout.LayoutParams(1000, 1000)
       else {
-        val dim = getResources().getDimension(if (back) R.dimen.back_album_size else R.dimen.front_album_size)
+        val dim =
+          getResources().getDimension(if (back) R.dimen.back_album_size else R.dimen.front_album_size)
         LinearLayout.LayoutParams(dim.toInt(), dim.toInt())
       }
     image.layoutParams = layoutParams

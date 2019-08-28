@@ -1,6 +1,8 @@
 package com.artefaktur.kmp3
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentTransaction
@@ -15,50 +17,56 @@ import com.artefaktur.kmp3.database.Track
 
 
 public fun FragmentManager.transaction(callback: FragmentTransaction.() -> Unit): Unit {
-    val trans = beginTransaction()
-    trans.callback()
-    trans.commit()
+  val trans = beginTransaction()
+  trans.callback()
+  trans.commit()
 }
 
 public fun doTrans(callback: FragmentTransaction.() -> Unit) {
-    getMainActivity().supportFragmentManager.transaction(callback)
+  getMainActivity().supportFragmentManager.transaction(callback)
 }
 
 public fun goMainLink(fragment: Fragment) {
-    getMainActivity().pushClient(fragment, R.id.main_replacement)
+  getMainActivity().pushClient(fragment, R.id.main_replacement)
 
 }
 
+public fun Fragment.openURL(url: String): Unit {
+  val intent = Intent()
+  intent.action = Intent.ACTION_VIEW
+  intent.data = Uri.parse(url)
+  startActivity(intent)
+}
 
 
 public fun toast(text: String) {
-    Toast.makeText(getMainActivity(), text, Toast.LENGTH_LONG).show()
+  Toast.makeText(getMainActivity(), text, Toast.LENGTH_LONG).show()
 }
 
 public fun currentTrackPlaying(): Track? {
-    return getMainActivity().mediaPlayerHolder.currentSong
+  return getMainActivity().mediaPlayerHolder.currentSong
 }
 
 public inline fun <T : View> T.afterMeasured(crossinline f: T.() -> Unit) {
-    viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
-        override fun onGlobalLayout() {
-            if (measuredWidth > 0 && measuredHeight > 0) {
-                viewTreeObserver.removeOnGlobalLayoutListener(this)
-                f()
-            }
-        }
-    })
+  viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+    override fun onGlobalLayout() {
+      if (measuredWidth > 0 && measuredHeight > 0) {
+        viewTreeObserver.removeOnGlobalLayoutListener(this)
+        f()
+      }
+    }
+  })
 }
 
 object UIUtils {
 
-    fun getColor(context: Context, color: Int, emergencyColor: Int): Int {
-        return try {
-            ContextCompat.getColor(context, color)
-        } catch (e: Exception) {
-            ContextCompat.getColor(context, emergencyColor)
-        }
+  fun getColor(context: Context, color: Int, emergencyColor: Int): Int {
+    return try {
+      ContextCompat.getColor(context, color)
+    } catch (e: Exception) {
+      ContextCompat.getColor(context, emergencyColor)
     }
+  }
 //
 //    fun setupSearch(
 //        searchView: SearchView, artistsAdapter: ComposerAdapter,
@@ -106,29 +114,29 @@ object UIUtils {
 //        }
 //    }
 
-    fun setHorizontalScrollBehavior(parentView: View, vararg textViews: TextView) {
-        var isLongPressed = false
+  fun setHorizontalScrollBehavior(parentView: View, vararg textViews: TextView) {
+    var isLongPressed = false
 
-        parentView.setOnLongClickListener {
-            if (!isLongPressed) {
-                textViews.forEachIndexed { _, textView ->
-                    textView.isSelected = true
-                }
-                isLongPressed = true
-            }
-            return@setOnLongClickListener true
+    parentView.setOnLongClickListener {
+      if (!isLongPressed) {
+        textViews.forEachIndexed { _, textView ->
+          textView.isSelected = true
         }
-
-        parentView.setOnTouchListener { _, e ->
-            if (isLongPressed && e.action == MotionEvent.ACTION_UP || e.action == MotionEvent.ACTION_OUTSIDE || e.action == MotionEvent.ACTION_MOVE) {
-
-                textViews.forEach {
-                    it.isSelected = false
-                }
-                isLongPressed = false
-            }
-            return@setOnTouchListener false
-        }
+        isLongPressed = true
+      }
+      return@setOnLongClickListener true
     }
+
+    parentView.setOnTouchListener { _, e ->
+      if (isLongPressed && e.action == MotionEvent.ACTION_UP || e.action == MotionEvent.ACTION_OUTSIDE || e.action == MotionEvent.ACTION_MOVE) {
+
+        textViews.forEach {
+          it.isSelected = false
+        }
+        isLongPressed = false
+      }
+      return@setOnTouchListener false
+    }
+  }
 }
 

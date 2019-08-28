@@ -26,3 +26,12 @@ fun Date?.toIsoString(): String {
   val formatter = SimpleDateFormat("yyyy-MM-dd")
   return formatter.format(this)
 }
+
+fun fromIsoString(s: String?): Date? {
+  if (s == null) {
+    return null
+  }
+  val formatter = SimpleDateFormat("yyyy-MM-dd")
+  val ret = formatter.parse(s)
+  return ret
+}

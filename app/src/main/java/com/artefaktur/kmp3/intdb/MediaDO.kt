@@ -10,8 +10,9 @@ data class MediaDO(
   @ColumnInfo(name = "mediaPk") val mediaPk: String,
   @ColumnInfo(name = "usage") var usage: Int = 0,
   @ColumnInfo(name = "lastHeared") var lastHeared: Date? = null,
-  @ColumnInfo(name = "rating") var rating: Int = 0
-
+  @ColumnInfo(name = "rating") var rating: Int = 0,
+  @ColumnInfo(name = "bookmark") var bookmark: Int? = null,
+  @ColumnInfo(name = "comment") var comment: String? = null
 ) {
   fun ratingAsStars(): String {
     val sb = StringBuilder()

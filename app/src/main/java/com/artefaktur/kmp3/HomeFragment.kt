@@ -22,7 +22,7 @@ class HomeFragment : BaseFragment() {
       var sortedMedia = ArrayList(Mp3Db.getDb().media)
       val sortedl = sortedMedia.sortedByDescending { it.createdDate }
 
-      val f = MediaListFragment.newInstance(sortedl)
+      val f = MediaListFragment.newInstance(sortedl, true)
       getMainActivity().pushClient(f, R.id.main_replacement)
     }
     view.home_button_orchester.setOnClickListener {

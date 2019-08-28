@@ -25,6 +25,7 @@ open class BaseFragment : Fragment() {
   protected fun resetMenu(mainActivity: MainActivity) {
     mainActivity.menu.findItem(R.id.menu_filter)?.let { it.setVisible(false) }
     mainActivity.menu.findItem(R.id.menu_rate)?.let { it.setVisible(false) }
+    mainActivity.menu.findItem(R.id.menu_sortmedia)?.let { it.setVisible(false) }
   }
 
   open fun ajustMenu(mainActivity: MainActivity) {

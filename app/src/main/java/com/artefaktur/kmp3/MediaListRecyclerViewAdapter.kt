@@ -72,6 +72,12 @@ class MediaListRecyclerViewAdapter(
       if (it.rating > 0) {
         ret.append(" " + size(0.7f, " [${it.ratingAsStars()}]"))
       }
+      if (it.bookmark != null && it.bookmark != 0) {
+        ret.append(" " + size(0.7f, " [B]"))
+      }
+      if (it.comment.isNullOrBlank() == false) {
+        ret.append(" " + size(0.7f, " [C]"))
+      }
     }
     return ret
   }

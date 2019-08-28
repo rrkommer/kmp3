@@ -19,7 +19,11 @@ import java.io.*
 
 
 class SettingsDialog : Fragment() {
-  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+  override fun onCreateView(
+    inflater: LayoutInflater,
+    container: ViewGroup?,
+    savedInstanceState: Bundle?
+  ): View? {
     val view = inflater.inflate(R.layout.fragment_settings_dialog, container, false)
     val settings = getMainActivity().getSettings()
     view.settings_cancel.setOnClickListener {
@@ -34,6 +38,15 @@ class SettingsDialog : Fragment() {
     view.settings_export.setOnClickListener {
       createExternalStoragePrivateFile()
     }
+    view.settings_usage_import.setOnClickListener {
+      val path = view.settings_import_usage_file.text.toString()
+      val file = File(path)
+      if (file.exists() == false) {
+        toast("File doesn't exists: ${file.absolutePath}")
+      } else {
+        getMainActivity().intDb.importMediaUsage(file)
+      }
+    }
     return view
   }
 
@@ -47,16 +60,20 @@ class SettingsDialog : Fragment() {
     val file = File(getMainActivity().getExternalFilesDir(null), "km3MediaUsage.txt")
     try {
       val os = OutputStreamWriter(BufferedOutputStream(FileOutputStream(file))).use {
-        it.write("MediaPK|Usage|lastHeared|Rating\n")
+        it.write("MediaPK|Usage|lastHeared|Rating|Bookmark|Comment\n")
         for (line in alluseages) {
-          val line = "${line.mediaPk}|${line.usage}|${line.lastHeared?.toIsoString() ?: ""}|${line.rating}\n"
+          val line =
+            "${line.mediaPk}|${line.usage}|${line.lastHeared?.toIsoString()
+              ?: ""}|${line.rating}|${line.bookmark ?: ""}|${line.comment ?: ""}\n"
           it.write(line)
         }
       }
+      toast("Written ${file.absolutePath}")
     } catch (e: IOException) {
       // Unable to create file, likely because external storage is
       // not currently mounted.
       Log.w("ExternalStorage", "Error writing $file", e)
+      toast("Error writing $file: ${e.message}")
     }
 
   }

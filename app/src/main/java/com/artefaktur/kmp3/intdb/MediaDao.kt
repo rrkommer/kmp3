@@ -6,6 +6,8 @@ import android.arch.persistence.room.*
 interface MediaDao {
   @Query("SELECT * FROM MediaDO")
   fun getAll(): List<MediaDO>
+  @Query("select mediaPk from MediaDO order by lastHeared desc")
+  fun getMediaPkOrderByHistory(): List<String>
 
   @Query("SELECT * FROM MediaDO WHERE mediaPk  = :mediaPk")
   fun findByMediaId(mediaPk: String): MediaDO?
@@ -21,5 +23,7 @@ interface MediaDao {
 
   @Query("DELETE FROM MediaDO")
   fun nukeTable()
+
+
 
 }

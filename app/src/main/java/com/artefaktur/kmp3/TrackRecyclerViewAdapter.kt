@@ -37,10 +37,11 @@ class TrackRecyclerViewAdapter(
 
   override fun onBindViewHolder(holder: ViewHolder, position: Int) {
     val item = tracks[position]
-    val renderTitle = showTitles && (position == 0 || (tracks[position - 1].title.pk != item.title.pk))
+    val renderTitle =
+      showTitles && (position == 0 || (tracks[position - 1].title.pk != item.title.pk))
     if (renderTitle == true) {
+      holder.track_list_titel.visibility = View.VISIBLE
       holder.track_list_titel.text = item.title.titleName
-
       holder.track_list_titel.setOnClickListener {
         val titleFrag = TitleDetailFragment.newInstance(item.title)
         goMainLink(titleFrag)

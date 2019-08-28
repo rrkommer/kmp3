@@ -18,12 +18,12 @@
         <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
+
             <android.support.design.widget.TextInputEditText
+                    android:id="@+id/settings_path"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="path to ourmp3 tables"
-                    android:id="@+id/settings_path"
-            />
+                    android:hint="path to ourmp3 tables" />
         </android.support.design.widget.TextInputLayout>
         <LinearLayout
                 android:orientation="horizontal"
@@ -43,5 +43,21 @@
                 android:text="Usage Exportieren"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" android:id="@+id/settings_export" android:layout_weight="1"/>
+
+        <EditText
+                android:id="@+id/settings_import_usage_file"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="path to usage import file"
+                android:inputType="textPersonName"
+                android:text="/storage/emulated/0/Android/data/com.artefaktur.kmp3/files/km3MediaUsage.txt" />
+
+        <Button
+                android:id="@+id/settings_usage_import"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Usage importieren" />
+
     </LinearLayout>
 </FrameLayout>

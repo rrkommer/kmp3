@@ -50,6 +50,15 @@ public class Composer extends RecBaseWithPk {
     return get(NAME);
   }
 
+  public String getFirstLastName() {
+    String name = getName();
+    int idx = name.indexOf(",");
+    if (idx == -1) {
+      return name;
+    }
+    return StringUtils.trim(name.substring(idx + 1)) + " " + StringUtils.trim(name.substring(0, idx));
+  }
+
   public String getCountry() {
     return get(COUNTRY);
   }

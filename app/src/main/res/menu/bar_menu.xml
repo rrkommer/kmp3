@@ -1,79 +1,117 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto"
-      xmlns:tools="http://schemas.android.com/tools"
-      tools:context=".MainActivity">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        tools:context=".MainActivity">
 
-    <item android:id="@+id/menu_filter"
-          android:title="Filter"
-          android:visible="false">
+    <item
+            android:id="@+id/menu_filter"
+            android:title="Filter"
+            android:visible="false">
         <menu>
-            <item android:id="@+id/menu_filter_unheared"
-                  android:title="Unheared"
-                  app:showAsAction="ifRoom|withText"
-                  app:actionViewClass="android.widget.CheckBox"/>
-            <item android:id="@+id/menu_filter_byrate"
-                  android:title="By Rate">
+            <item
+                    android:id="@+id/menu_filter_unheared"
+                    android:title="Unheared"
+                    android:checkable="true"
+                    app:actionViewClass="android.widget.CheckBox"
+                    app:showAsAction="ifRoom|withText" />
+            <item
+                    android:id="@+id/menu_filter_bookmarked"
+                    android:title="Bookmarked"
+                    android:checkable="true"
+                    app:actionViewClass="android.widget.CheckBox"
+                    app:showAsAction="ifRoom|withText" />
+            <item
+                    android:id="@+id/menu_filter_byrate"
+                    android:title="By Rate">
                 <menu>
-                    <item android:id="@+id/menu_filter_all_rate"
-                          android:title="All"
-                          android:checkable="true"
-                          app:showAsAction="ifRoom|withText"
-                          app:actionViewClass="android.widget.CheckBox"
-                    />
-                    <item android:id="@+id/menu_filter_rate5"
-                          android:title="*****"
-                          android:checkable="true"
-                          app:showAsAction="ifRoom|withText"
-                          app:actionViewClass="android.widget.CheckBox"
-                    />
-                    <item android:id="@+id/menu_filter_rate4"
-                          android:title="****"
-                          android:checkable="true"
-                          app:showAsAction="ifRoom|withText"
-                          app:actionViewClass="android.widget.CheckBox"
-                    />
-                    <item android:id="@+id/menu_filter_rate3"
-                          android:title="***"
-                          android:checkable="true"
-                          app:showAsAction="ifRoom|withText"
-                          app:actionViewClass="android.widget.CheckBox"
-                    />
-                    <item android:id="@+id/menu_filter_rate2"
-                          android:title="**"
-                          android:checkable="true"
-                          app:showAsAction="ifRoom|withText"
-                          app:actionViewClass="android.widget.CheckBox"
-                    />
-                    <item android:id="@+id/menu_filter_rate1"
-                          android:title="*"
-                          android:checkable="true"
-                          app:showAsAction="ifRoom|withText"
-                          app:actionViewClass="android.widget.CheckBox"
-                    />
+                    <item
+                            android:id="@+id/menu_filter_all_rate"
+                            android:checkable="true"
+                            android:title="All"
+                            app:actionViewClass="android.widget.CheckBox"
+                            app:showAsAction="ifRoom|withText" />
+                    <item
+                            android:id="@+id/menu_filter_rate5"
+                            android:checkable="true"
+                            android:title="*****"
+                            app:actionViewClass="android.widget.CheckBox"
+                            app:showAsAction="ifRoom|withText" />
+                    <item
+                            android:id="@+id/menu_filter_rate4"
+                            android:checkable="true"
+                            android:title="****"
+                            app:actionViewClass="android.widget.CheckBox"
+                            app:showAsAction="ifRoom|withText" />
+                    <item
+                            android:id="@+id/menu_filter_rate3"
+                            android:checkable="true"
+                            android:title="***"
+                            app:actionViewClass="android.widget.CheckBox"
+                            app:showAsAction="ifRoom|withText" />
+                    <item
+                            android:id="@+id/menu_filter_rate2"
+                            android:checkable="true"
+                            android:title="**"
+                            app:actionViewClass="android.widget.CheckBox"
+                            app:showAsAction="ifRoom|withText" />
+                    <item
+                            android:id="@+id/menu_filter_rate1"
+                            android:checkable="true"
+                            android:title="*"
+                            app:actionViewClass="android.widget.CheckBox"
+                            app:showAsAction="ifRoom|withText" />
+                    <item
+                            android:id="@+id/menu_filter_rate0"
+                            android:checkable="true"
+                            android:title="-"
+                            app:actionViewClass="android.widget.CheckBox"
+                            app:showAsAction="ifRoom|withText" />
                 </menu>
             </item>
         </menu>
     </item>
-    <item android:id="@+id/menu_rate"
-          android:title="Rating"
-          android:visible="false">
+    <item
+            android:id="@+id/menu_rate"
+            android:title="Rating"
+            android:visible="false">
         <menu>
-            <item android:id="@+id/menu_rate1"
-                  android:title="*"/>
-            <item android:id="@+id/menu_rate2"
-                  android:title="**"/>
-            <item android:id="@+id/menu_rate3"
-                  android:title="***"/>
-            <item android:id="@+id/menu_rate4"
-                  android:title="****"/>
-            <item android:id="@+id/menu_rate5"
-                  android:title="*****"/>
+            <item
+                    android:id="@+id/menu_rate1"
+                    android:title="*" />
+            <item
+                    android:id="@+id/menu_rate2"
+                    android:title="**" />
+            <item
+                    android:id="@+id/menu_rate3"
+                    android:title="***" />
+            <item
+                    android:id="@+id/menu_rate4"
+                    android:title="****" />
+            <item
+                    android:id="@+id/menu_rate5"
+                    android:title="*****" />
+        </menu>
+    </item>
+    <item
+            android:id="@+id/menu_sortmedia"
+            android:title="Sort"
+            android:visible="false">
+        <menu>
+            <item
+                    android:id="@+id/menu_sortmedia_indb"
+                    android:checkable="true"
+                    android:title="InDb"
+                    app:actionViewClass="android.widget.CheckBox" />
+            <item
+                    android:id="@+id/menu_sortmedia_history"
+                    android:checkable="true"
+                    android:title="History"
+                    app:actionViewClass="android.widget.CheckBox" />
         </menu>
     </item>
     <item
             android:id="@+id/menu_configure"
-            android:title="Config"
-    />
+            android:title="Config" />
 
 </menu>

@@ -16,6 +16,7 @@ import android.os.Handler
 import android.os.PowerManager
 import android.util.Log
 import com.artefaktur.kmp3.PlayerFragment
+import com.artefaktur.kmp3.database.Media
 import com.artefaktur.kmp3.database.Track
 import com.artefaktur.kmp3.player.PlayerService
 import com.artefaktur.kmp3.toast
@@ -58,7 +59,8 @@ class MediaPlayerHolder(
   lateinit var playerFragment: PlayerFragment
 
   //audio focus
-  private var mAudioManager: AudioManager = playerService.getSystemService(AUDIO_SERVICE) as AudioManager
+  private var mAudioManager: AudioManager =
+    playerService.getSystemService(AUDIO_SERVICE) as AudioManager
   private lateinit var mAudioFocusRequestOreo: AudioFocusRequest
   private val mHandler = Handler()
 
@@ -68,10 +70,12 @@ class MediaPlayerHolder(
 
   //media player
   var mediaPlayer: MediaPlayer? = null
+  var nextMediaPlayer: MediaPlayer? = null
   private var mExecutor: ScheduledExecutorService? = null
   private var mSeekBarPositionUpdateTask: Runnable? = null
   private var mPlayingAlbumSongs: List<Track>? = null
   var currentSong: Track? = null
+  var nextSong: Track? = null
   val playerPosition: Int get() = mediaPlayer!!.currentPosition
 
   //media player state/booleans
@@ -174,8 +178,18 @@ class MediaPlayerHolder(
 
   fun startPlaying(track: Track, tracks: List<Track>) {
     setCurrentSong(track, tracks)
-    initMediaPlayer(track)
+    mediaPlayer = initMediaPlayer(track, mediaPlayer)
     resumeMediaPlayer()
+    prepareNextSong(track, tracks)
+  }
+
+  fun prepareNextSong(track: Track, tracks: List<Track>) {
+    val idx = tracks.indexOf(track)
+    if (idx < tracks.size - 1) {
+      val ns = tracks[idx + 1]
+      nextSong = ns
+      nextMediaPlayer = initMediaPlayer(ns, nextMediaPlayer)
+    }
   }
 
   private fun tryToGetAudioFocus() {
@@ -227,7 +241,10 @@ class MediaPlayerHolder(
     if (isPlaying == true) {
       return
     }
-    val mp = mediaPlayer!!
+    playMediaPlayer(mediaPlayer!!)
+  }
+
+  fun playMediaPlayer(mp: MediaPlayer) {
     mp.start()
     setStatus(RESUMED)
     playerService.startForeground(
@@ -297,9 +314,6 @@ class MediaPlayerHolder(
     }
   }
 
-  fun pathForTrack(track: Track) {
-
-  }
 
   /**
    * Once the [MediaPlayer] is released, it can't be used again, and another one has to be
@@ -308,19 +322,22 @@ class MediaPlayerHolder(
    * object has to be created. That's why this method is private, and called by load(int) and
    * not the constructor.
    */
-  fun initMediaPlayer(song: Track) {
-
+  fun initMediaPlayer(song: Track, mediaPlayer: MediaPlayer?): MediaPlayer? {
+    var mp = mediaPlayer
     try {
-      if (mediaPlayer != null) {
-        mediaPlayer!!.reset()
+      if (mp != null) {
+        mp.reset()
       } else {
-        mediaPlayer = MediaPlayer()
-        EqualizerUtils.openAudioEffectSession(playerService.applicationContext, mediaPlayer!!.audioSessionId)
+        mp = MediaPlayer()
+        EqualizerUtils.openAudioEffectSession(
+          playerService.applicationContext,
+          mp!!.audioSessionId
+        )
 
-        mediaPlayer!!.setOnPreparedListener(this)
-        mediaPlayer!!.setOnCompletionListener(this)
-        mediaPlayer!!.setWakeMode(playerService, PowerManager.PARTIAL_WAKE_LOCK)
-        mediaPlayer!!.setAudioAttributes(
+        mp.setOnPreparedListener(this)
+        mp.setOnCompletionListener(this)
+        mp.setWakeMode(playerService, PowerManager.PARTIAL_WAKE_LOCK)
+        mp.setAudioAttributes(
           AudioAttributes.Builder()
             .setUsage(AudioAttributes.USAGE_MEDIA)
             .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
@@ -329,13 +346,14 @@ class MediaPlayerHolder(
         mMusicNotificationManager = playerService.musicNotificationManager
       }
       tryToGetAudioFocus()
-      mediaPlayer!!.setDataSource(song.mp3Path.absolutePath)
-      mediaPlayer!!.prepare()
+      mp.setDataSource(song.mp3Path.absolutePath)
+      mp.prepare()
+      return mp
     } catch (e: Exception) {
 
       Log.e("", e.message, e)
     }
-
+    return null
   }
 
   override fun onPrepared(mediaPlayer: MediaPlayer) {
@@ -349,12 +367,23 @@ class MediaPlayerHolder(
 
   fun release() {
     if (isMediaPlayer) {
-      EqualizerUtils.closeAudioEffectSession(playerService.applicationContext, mediaPlayer!!.audioSessionId)
-      mediaPlayer!!.release()
-      mediaPlayer = null
+      EqualizerUtils.closeAudioEffectSession(
+        playerService.applicationContext,
+        mediaPlayer!!.audioSessionId
+      )
+      mediaPlayer = clearMediaPlayer(mediaPlayer)
+      nextMediaPlayer = clearMediaPlayer(nextMediaPlayer)
+
       giveUpAudioFocus()
       unregisterActionsReceiver()
     }
+  }
+
+  fun clearMediaPlayer(mp: MediaPlayer?): MediaPlayer? {
+    if (mp != null) {
+      mp.release()
+    }
+    return null
   }
 
   fun resumeOrPause() {
@@ -383,11 +412,28 @@ class MediaPlayerHolder(
         pauseMediaPlayer()
         return
       }
+
       currentSong = mPlayingAlbumSongs!![index]
+      if (currentSong == nextSong && nextMediaPlayer != null) {
+        val prevMediaPlayer = mediaPlayer
+        if (prevMediaPlayer != null) {
+          prevMediaPlayer!!.pause()
+        }
+        Log.i("Player", "useprenext: ${currentSong!!.name}")
+        mediaPlayer = nextMediaPlayer
+        playMediaPlayer(mediaPlayer!!)
+        setStatus(PLAYING)
+        nextMediaPlayer = prevMediaPlayer
+        nextSong = null
+        prepareNextSong(currentSong!!, mPlayingAlbumSongs!!)
+      } else {
+        mediaPlayer = initMediaPlayer(currentSong!!, mediaPlayer)
+      }
     } catch (e: IndexOutOfBoundsException) {
       toast("Cannot play song at index: ${index}, trackssize=${mPlayingAlbumSongs!!.size})")
     }
-    initMediaPlayer(currentSong!!)
+
+
   }
 
   fun seekTo(position: Int) {

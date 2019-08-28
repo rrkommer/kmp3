@@ -65,7 +65,9 @@ class MainActivity : AppCompatActivity(),
   private fun createDb() {
     intDb = Room.databaseBuilder(
       applicationContext, IntDatabase::class.java, "kmp3"
-    ).allowMainThreadQueries().build()
+    )
+      .addMigrations(IntDatabase.MIGRATION_1_2)
+      .allowMainThreadQueries().build()
     intDb.initData()
   }
 

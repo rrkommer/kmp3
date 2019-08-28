@@ -37,8 +37,11 @@ class PlayerFragment : BaseFragment() {
   private var sUserIsSeeking = false
 
 
-
-  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+  override fun onCreateView(
+    inflater: LayoutInflater,
+    container: ViewGroup?,
+    savedInstanceState: Bundle?
+  ): View? {
     val view = inflater.inflate(R.layout.fragment_player, container, false)
     view.player_info.setOnClickListener {
       currentTrackPlaying()?.let {
@@ -70,7 +73,13 @@ class PlayerFragment : BaseFragment() {
       override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
         if (fromUser) {
           userSelectedPosition = progress
-          view.song_position.setTextColor(UIUtils.getColor(getMainActivity(), mAccent, R.color.blue))
+          view.song_position.setTextColor(
+            UIUtils.getColor(
+              getMainActivity(),
+              mAccent,
+              R.color.blue
+            )
+          )
         }
         view.song_position.text = MusicUtils.formatSongDuration(progress.toLong())
       }
@@ -95,7 +104,8 @@ class PlayerFragment : BaseFragment() {
     val mph = getMediaPlayerHolder()
     updatePlayingStatus(mph)
     if (mph.state != com.artefaktur.ourmp3.player.RESUMED && mph.state != PAUSED) {
-      updatePlayingInfo(false, true)
+      Log.i("player", "PlayerState: ${mph.state}, track:${mph.currentSong?.name}")
+      updatePlayingInfo(false, false)
     }
   }
 
@@ -138,9 +148,13 @@ class PlayerFragment : BaseFragment() {
   }
 
 
-  private fun updateResetStatus(mMediaPlayerHolder: MediaPlayerHolder, onPlaybackCompletion: Boolean) {
+  private fun updateResetStatus(
+    mMediaPlayerHolder: MediaPlayerHolder,
+    onPlaybackCompletion: Boolean
+  ) {
     val themeColor = if (sThemeInverted) R.color.white else R.color.black
-    val color = if (onPlaybackCompletion) themeColor else if (mMediaPlayerHolder.isReset) mAccent else themeColor
+    val color =
+      if (onPlaybackCompletion) themeColor else if (mMediaPlayerHolder.isReset) mAccent else themeColor
     skip_prev_button.setColorFilter(
       UIUtils.getColor(
         getMainActivity(), color,
@@ -172,9 +186,16 @@ class PlayerFragment : BaseFragment() {
     val title = track.title
     val composer = title.composer
     playing_song.text =
-      MusicUtils.buildSpanned(getString(R.string.playing_song, composer.name, track.title.titleName))
+      MusicUtils.buildSpanned(
+        getString(
+          R.string.playing_song,
+          composer.name,
+          track.title.titleName
+        )
+      )
     playing_album.text = title.titleName
     playing_track.text = track.name
+    Log.i("Player", "set trackinfo: ${track.name}")
     listener?.onStartPlayTrack(track)
     if (restore) {
       song_position.text = MusicUtils.formatSongDuration(mMediaPlayerHolder.playerPosition.toLong())
@@ -196,7 +217,8 @@ class PlayerFragment : BaseFragment() {
   }
 
   private fun updatePlayingStatus(mMediaPlayerHolder: MediaPlayerHolder) {
-    val drawable = if (mMediaPlayerHolder.state != PAUSED) R.drawable.ic_pause else R.drawable.ic_play
+    val drawable =
+      if (mMediaPlayerHolder.state != PAUSED) R.drawable.ic_pause else R.drawable.ic_play
     play_pause_button.setImageResource(drawable)
   }
 
