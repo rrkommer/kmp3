@@ -63,7 +63,7 @@ class ComposerDetailFragment : BaseFragment() {
   fun createDetailView(): Spannable {
     val title = spannable {
       bold(size(2.0f, "${composer.name}\n")) +
-              bold("(${composer.bornYear} - ${composer.diedYear}) ${composer.country}\n")
+              bold("(${composer.bornYear} - ${composer.diedYear}) ${composer.country}\n") +
       clickSpan(normal("Im Web Suchen")) {
         var name = composer.firstLastName
 
