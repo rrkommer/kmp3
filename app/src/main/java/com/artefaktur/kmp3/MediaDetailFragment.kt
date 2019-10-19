@@ -120,6 +120,13 @@ class MediaDetailFragment : BaseFragment(), PlayerStatusReceiver {
         openMediaDialog(view, "")
       })
     }
+    val longComment = media.longComment
+    if (longComment.isNullOrBlank() == false) {
+      sb.append("  ").append(clickSpan(normal("[Anmerkung]")) {
+        LongTextDialog.openDialog(view, longComment)
+      })
+    }
+//    media.
     sb.append("\n")
     val jpc = media.jpcId
     if (jpc.isNullOrBlank() == false) {

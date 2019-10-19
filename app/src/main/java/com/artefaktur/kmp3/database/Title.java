@@ -67,6 +67,8 @@ public class Title extends RecBaseWithPk implements EntityWithTracks
 
   public static final int IGNORE_ROGIPOD = 31;
 
+  public static final int LONG_COMMENT = 32;
+
   private List<Track> tracks = null;
 
   public Title(Mp3Db db, String[] rec)
@@ -142,7 +144,10 @@ public class Title extends RecBaseWithPk implements EntityWithTracks
     return normalize(getTitleName());
 
   }
-
+  public String getLongComment() {
+    String s = get(LONG_COMMENT);
+    return s;
+  }
   public File getMp3Path()
   {
     if (mp3path != null) {

@@ -65,6 +65,7 @@ public class Media extends RecBaseWithPk implements EntityWithTracks {
 
   public static final int IGNORE_ROGIPOD = 25;
 
+  public static final int LONG_COMMENT = 18;
   List<Track> tracks = null;
 
   /**
@@ -267,7 +268,10 @@ public class Media extends RecBaseWithPk implements EntityWithTracks {
     }
     return 1;
   }
-
+  public String getLongComment() {
+    String s = get(LONG_COMMENT);
+    return s;
+  }
   @Override
   public boolean equals(Object other) {
     if ((other instanceof Media) == false) {

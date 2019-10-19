@@ -16,20 +16,21 @@
 
 package com.artefaktur.kmp3.database;
 
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVRecord;
+import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 
 /**
- * 
  * @author Roger Rene Kommer (r.kommer.extern@micromata.de)
- * 
  */
-public class CsvTable
-{
+public class CsvTable {
   public List<String[]> table = new ArrayList<String[]>();
 
   private char fieldSeperator = '|';
@@ -41,8 +42,8 @@ public class CsvTable
   public int size() {
     return table.size();
   }
-  public void load(File file)
-  {
+
+  public void load(File file) {
     try {
       load(new BufferedInputStream(new FileInputStream(file)));
     } catch (FileNotFoundException e) {
@@ -50,8 +51,7 @@ public class CsvTable
     }
   }
 
-  public void store(File file)
-  {
+  public void store(File file) {
     StringBuilder sb = new StringBuilder();
     for (String[] line : table) {
       sb.append(StringUtils.join(line, '|')).append("\n");
@@ -67,8 +67,7 @@ public class CsvTable
     }
   }
 
-  public List<String> loadLines(InputStream is)
-  {
+  public List<String> loadLines(InputStream is) {
     try {
       return IOUtils.readLines(is, encoding);
     } catch (IOException ex) {
@@ -76,8 +75,7 @@ public class CsvTable
     }
   }
 
-  public static String[] split(String line, char sepChar)
-  {
+  public static String[] split(String line, char sepChar) {
     int count = 1;
     for (int i = 0; i < line.length(); ++i) {
       if (line.charAt(i) == sepChar) {
@@ -102,25 +100,32 @@ public class CsvTable
     return ret;
   }
 
-  public void load(InputStream is)
-  {
-    List<String> lines = loadLines(is);
-    IOUtils.closeQuietly(is);
-    for (String l : lines) {
-      if (StringUtils.isBlank(l) == true) {
-        continue;
+  public void load(InputStream is) {
+    try {
+      Iterable<CSVRecord> records = CSVFormat.DEFAULT
+              .withDelimiter('|')
+              .withQuote('"')
+
+              .parse(new InputStreamReader(is, StandardCharsets.UTF_8));
+      for (CSVRecord rec : records) {
+
+        List<String> line = new ArrayList<>(rec.size());
+        for (String t : rec) {
+          line.add(t);
+        }
+        table.add(line.toArray(new String[]{}));
       }
-      table.add(split(l, fieldSeperator));
+
+    } catch (IOException ex) {
+      throw new RuntimeException(ex);
     }
   }
 
-  public void sortByIndex(List<String[]> rec, final int... idx)
-  {
+  public void sortByIndex(List<String[]> rec, final int... idx) {
     Collections.sort(rec, new Comparator<String[]>() {
 
       @Override
-      public int compare(String[] o1, String[] o2)
-      {
+      public int compare(String[] o1, String[] o2) {
         for (int i = 0; i < idx.length; ++i) {
           int c = o1[idx[i]].compareTo(o2[idx[i]]);
           if (c != 0) {
@@ -132,8 +137,7 @@ public class CsvTable
     });
   }
 
-  public void add(String[] row)
-  {
+  public void add(String[] row) {
     table.add(row);
     for (Map.Entry<Integer, TreeMap<String, List<String[]>>> me : indices.entrySet()) {
       if (row.length > me.getKey()) {
@@ -150,15 +154,13 @@ public class CsvTable
     }
   }
 
-  public List<String[]> getSortByIndex(final int... idx)
-  {
+  public List<String[]> getSortByIndex(final int... idx) {
     List<String[]> ret = new ArrayList<String[]>(table);
     sortByIndex(ret, idx);
     return ret;
   }
 
-  public void createIndex(int column)
-  {
+  public void createIndex(int column) {
     TreeMap<String, List<String[]>> index = new TreeMap<String, List<String[]>>();
     for (String[] rec : table) {
       if (rec.length <= column) {
@@ -184,8 +186,7 @@ public class CsvTable
   //
   // }
 
-  public List<String[]> getUniqueSorted(int idx)
-  {
+  public List<String[]> getUniqueSorted(int idx) {
     Map<String, String[]> ret = new TreeMap<String, String[]>();
     for (String[] rec : table) {
       if (rec.length > idx) {
@@ -195,8 +196,7 @@ public class CsvTable
     return new ArrayList<String[]>(ret.values());
   }
 
-  public String[] findFirst(int idx, String name)
-  {
+  public String[] findFirst(int idx, String name) {
     TreeMap<String, List<String[]>> index = indices.get(idx);
     if (index != null) {
       List<String[]> n = index.get(name);
@@ -216,8 +216,7 @@ public class CsvTable
     return null;
   }
 
-  public List<String[]> findEquals(int idx, String name)
-  {
+  public List<String[]> findEquals(int idx, String name) {
     TreeMap<String, List<String[]>> index = indices.get(idx);
     if (index != null) {
       List<String[]> ret = index.get(name);
@@ -238,8 +237,7 @@ public class CsvTable
     return ret;
   }
 
-  public List<String[]> findMultiEquals(Pair<Integer, String>... keys)
-  {
+  public List<String[]> findMultiEquals(Pair<Integer, String>... keys) {
     if (keys.length > 0) {
       TreeMap<String, List<String[]>> idx = indices.get(keys[0].getFirst());
       if (idx != null) {
@@ -254,10 +252,10 @@ public class CsvTable
     return findMultiEquals(table, keys);
   }
 
-  private List<String[]> findMultiEquals(List<String[]> subtable, Pair<Integer, String>... keys)
-  {
+  private List<String[]> findMultiEquals(List<String[]> subtable, Pair<Integer, String>... keys) {
     List<String[]> ret = new ArrayList<String[]>();
-    nextRow: for (String[] rec : subtable) {
+    nextRow:
+    for (String[] rec : subtable) {
       for (Pair<Integer, String> key : keys) {
         Integer idx = key.getFirst();
         if (rec.length <= idx) {
@@ -273,8 +271,7 @@ public class CsvTable
     return ret;
   }
 
-  public List<String[]> findContaining(int idx, String name)
-  {
+  public List<String[]> findContaining(int idx, String name) {
     List<String[]> ret = new ArrayList<String[]>();
     for (String[] rec : table) {
       if (rec.length > idx) {

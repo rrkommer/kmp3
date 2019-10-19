@@ -31,7 +31,7 @@ class TitleDetailFragment : BaseFragment(), PlayerStatusReceiver {
     return sb
   }
 
-  fun createDetailView(): Spannable {
+  fun createDetailView(view: View): Spannable {
     val sb = SpannableStringBuilder()
     var t2 = title.get(Title.TITEL2)
     if (t2.isNotBlank()) {
@@ -64,8 +64,15 @@ class TitleDetailFragment : BaseFragment(), PlayerStatusReceiver {
     appendCol(lb, "AF", title.get(Title.RECORDTYPE))
     appendCol(lb, "Jahr", title.get(Title.RECORDYEAR))
     appendCol(lb, "Einspielung", title.get(Title.EINSPIELUNG))
+
     if (lb.length > 0) {
       sb.append(lb.append("\n").toString())
+    }
+    val longComment = title.longComment
+    if (longComment.isNullOrBlank() == false) {
+      sb.append("  ").append(clickSpan(normal("[Anmerkung]\n")) {
+        LongTextDialog.openDialog(view, longComment)
+      })
     }
     val dirigent = title.get(Title.DIRIGENT)
     if (dirigent.isNotBlank()) {
@@ -119,7 +126,7 @@ class TitleDetailFragment : BaseFragment(), PlayerStatusReceiver {
         Log.w("", "No Track")
       }
     }
-    view.title_detail_name.text = createDetailView()
+    view.title_detail_name.text = createDetailView(view)
     view.title_detail_name.setMovementMethod(LinkMovementMethod.getInstance())
 
     doTrans {
